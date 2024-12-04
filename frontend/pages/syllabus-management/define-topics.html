@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Define Syllabus Topics</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <script src="../../js/define-topics.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Define Syllabus Topics</h1>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <form id="defineTopicForm">
+                <label for="topic">Syllabus Topic:</label>
+                <input type="text" id="topic" name="topic" required>
+
+                <label for="deadline">Deadline:</label>
+                <input type="date" id="deadline" name="deadline" required>
+
+                <button type="submit" class="button">Add Topic</button>
+            </form>
+        </div>
+
+        <section id="topicsList">
+            <h2>Defined Topics</h2>
+            <ul id="topicsUL">
+                <!-- Dynamically added topics will appear here -->
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Syllabus Deadline Optimizer</p>
+    </footer>
+</body>
+</html>

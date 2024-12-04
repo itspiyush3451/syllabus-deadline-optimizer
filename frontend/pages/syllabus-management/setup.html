@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syllabus Setup</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <script src="../../js/validation.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Setup Syllabus</h1>
+        </header>
+
+        <form id="syllabusForm">
+            <div class="form-group">
+                <label for="syllabusName">Syllabus Name</label>
+                <input type="text" id="syllabusName" name="syllabusName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input type="date" id="startDate" name="startDate" required>
+            </div>
+
+            <div class="form-group">
+                <label for="endDate">End Date</label>
+                <input type="date" id="endDate" name="endDate" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Save Syllabus</button>
+        </form>
+
+        <footer>
+            <p>&copy; 2024 Syllabus Deadline Optimizer</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('syllabusForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission for now
+
+            // Basic validation
+            let syllabusName = document.getElementById('syllabusName').value;
+            let startDate = document.getElementById('startDate').value;
+            let endDate = document.getElementById('endDate').value;
+
+            if (!syllabusName || !startDate || !endDate) {
+                alert('All fields are required!');
+            } else {
+                // Simulate saving data (you can replace this with an API call later)
+                alert('Syllabus saved successfully!');
+                
+                // Reset the form after submission
+                document.getElementById('syllabusForm').reset();
+            }
+        });
+    </script>
+</body>
+</html>
