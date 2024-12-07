@@ -1,54 +1,36 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const topicList = document.getElementById('topicList');
-    const progressFill = document.getElementById('progressFill');
-    const completedCount = document.getElementById('completedCount');
-    const totalCount = document.getElementById('totalCount');
+document.addEventListener("DOMContentLoaded", () => {
+  const progressTable = document.getElementById("progress-table");
 
-    // Example topics array with completion status
-    let topics = [
-        { name: "Topic 1", completed: false },
-        { name: "Topic 2", completed: true },
-        { name: "Topic 3", completed: false },
-        { name: "Topic 4", completed: true }
-    ];
+  // Retrieve topics from local storage
+  const topics = JSON.parse(localStorage.getItem("topics")) || [];
 
-    // Function to update the progress bar
-    function updateProgressBar() {
-        const totalTopics = topics.length;
-        const completedTopics = topics.filter(topic => topic.completed).length;
-        const progressPercentage = (completedTopics / totalTopics) * 100;
+  function renderProgress() {
+    progressTable.innerHTML = `
+            <tr>
+                <th>Course</th>
+                <th>Topic</th>
+                <th>Estimated Hours</th>
+                <th>Topic Sequence</th>
+                <th>Subtopics</th>
+                <th>Deadline</th>
+                <th>Status</th>
+            </tr>
+        `;
+    topics.forEach((topic) => {
+      const row = document.createElement("tr");
 
-        // Update the progress bar
-        progressFill.style.width = `${progressPercentage}%`;
-
-        // Update the progress info
-        completedCount.textContent = completedTopics;
-        totalCount.textContent = totalTopics;
-    }
-
-    // Function to toggle topic completion
-    function toggleCompletion(index) {
-        topics[index].completed = !topics[index].completed;
-        updateProgressBar();
-        renderTopics();
-    }
-
-    // Function to render topics in the list
-    function renderTopics() {
-        topicList.innerHTML = ''; // Clear the current list
-
-        topics.forEach((topic, index) => {
-            const li = document.createElement('li');
-            li.classList.add('topic-item');
-            li.innerHTML = `
-                <span class="${topic.completed ? 'completed' : ''}">${topic.name}</span>
-                <button class="toggle-btn" onclick="toggleCompletion(${index})">${topic.completed ? 'Mark Incomplete' : 'Mark Complete'}</button>
+      row.innerHTML = `
+                <td>${topic.course}</td>
+                <td>${topic.name}</td>
+                <td>${topic.estimatedHours}</td>
+                <td>${topic.sequence}</td>
+                <td>${topic.subtopics.join(", ")}</td>
+                <td>${topic.deadline}</td>
+                <td>${topic.status}</td>
             `;
-            topicList.appendChild(li);
-        });
-    }
+      progressTable.appendChild(row);
+    });
+  }
 
-    // Initialize the progress and render topics
-    renderTopics();
-    updateProgressBar();
+  renderProgress();
 });

@@ -1,37 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Progress Tracking</title>
-    <link rel="stylesheet" href="../../css/style.css">
-    <script src="../../js/progress.js" defer></script>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Progress Tracker</title>
+    <link rel="stylesheet" href="../../css/style.css" />
+    <script defer src="../../js/progress.js"></script>
+  </head>
+  <body>
     <header>
-        <h1>Progress Tracking</h1>
+      <h1>Progress Tracker</h1>
     </header>
-
     <main>
-        <section class="progress-container">
-            <div class="progress-bar">
-                <div id="progressFill" class="progress-fill"></div>
-            </div>
-            <div class="progress-info">
-                <span id="completedCount">0</span> of <span id="totalCount">0</span> topics completed
-            </div>
-        </section>
-
-        <section class="topic-list">
-            <h2>Topics</h2>
-            <ul id="topicList">
-                <!-- Dynamically added topics will appear here -->
-            </ul>
-        </section>
+      <table id="progress-table"></table>
     </main>
-
-    <footer>
-        <p>&copy; 2024 Syllabus Deadline Optimizer</p>
-    </footer>
-</body>
+  </body>
 </html>

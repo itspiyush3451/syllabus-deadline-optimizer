@@ -1,32 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar View</title>
-    <link rel="stylesheet" href="../../css/style.css">
-    <script src="../../js/calendar.js" defer></script>
-</head>
-<body>
-    <header>
-        <h1>Calendar View</h1>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar | Syllabus Deadline Optimizer</title>
+    <link rel="stylesheet" href="../../css/style.css" />
+    <script defer src="../../js/calendar.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Course Calendar</h1>
+      <table id="calendar-table" class="calendar-table">
+        <!-- Table content will be populated by JS -->
+      </table>
 
-    <main>
-        <section class="calendar-container">
-            <div id="calendar"></div>
-        </section>
+      <h2>Add/Update Topic</h2>
+      <form id="add-topic-form">
+        <input type="hidden" id="original-topic-name" />
+        <input type="hidden" id="action" value="add" />
+        <label for="course">Course:</label>
+        <input type="text" id="course" required />
 
-        <section class="task-info">
-            <h2>Tasks</h2>
-            <ul id="taskList">
-                <!-- Dynamically added tasks will appear here -->
-            </ul>
-        </section>
-    </main>
+        <label for="topic-name">Topic Name:</label>
+        <input type="text" id="topic-name" required />
 
-    <footer>
-        <p>&copy; 2024 Syllabus Deadline Optimizer</p>
-    </footer>
-</body>
+        <label for="estimated-hours">Estimated Hours:</label>
+        <input type="number" id="estimated-hours" required />
+
+        <label for="topic-sequence">Topic Sequence:</label>
+        <input type="number" id="topic-sequence" required />
+
+        <label for="subtopics">Subtopics:</label>
+        <input type="text" id="subtopics" required />
+
+        <label for="deadline-date">Deadline:</label>
+        <input type="date" id="deadline-date" required />
+
+        <label for="status">Status:</label>
+        <select id="status" required>
+          <option value="Not Started">Not Started</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+
+        <button type="submit">Save/Update Topic</button>
+      </form>
+    </div>
+  </body>
 </html>

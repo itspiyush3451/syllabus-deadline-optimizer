@@ -1,93 +1,112 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const calendarElement = document.getElementById('calendar');
-    const taskList = document.getElementById('taskList');
+document.addEventListener("DOMContentLoaded", () => {
+  const calendarTable = document.getElementById("calendar-table");
+  const addTopicForm = document.getElementById("add-topic-form");
 
-    // Example events array with tasks and completion status
-    const events = [
-        { date: "2024-12-05", title: "Topic 1 Lecture", completed: false },
-        { date: "2024-12-10", title: "Topic 2 Lecture", completed: true },
-        { date: "2024-12-15", title: "Topic 3 Lecture", completed: false },
-        { date: "2024-12-20", title: "Topic 4 Lecture", completed: true }
-    ];
+  // Retrieve topics from local storage
+  const topics = JSON.parse(localStorage.getItem("topics")) || [];
 
-    // Function to render the calendar
-    function renderCalendar() {
-        const currentDate = new Date();
-        const currentMonth = currentDate.getMonth(); // 0-based (0=January)
-        const currentYear = currentDate.getFullYear();
-
-        // Create the calendar month grid
-        const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-        const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-        const totalDaysInMonth = lastDayOfMonth.getDate();
-        let html = "<table class='calendar-table'>";
-        html += "<tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>";
-        let dayOfWeek = firstDayOfMonth.getDay(); // Day of the week for the 1st day of the month
-        html += "<tr>";
-
-        // Blank spaces before the first day of the month
-        for (let i = 0; i < dayOfWeek; i++) {
-            html += "<td></td>";
-        }
-
-        // Loop through all the days in the month
-        for (let day = 1; day <= totalDaysInMonth; day++) {
-            if (dayOfWeek === 7) {
-                html += "</tr><tr>";
-                dayOfWeek = 0;
-            }
-            const dateString = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-
-            // Check if there are events on this day
-            const event = events.find(event => event.date === dateString);
-            html += `<td class="calendar-day${event ? ' event-day' : ''}" data-date="${dateString}">${day}</td>`;
-            dayOfWeek++;
-        }
-
-        // Fill the remaining empty cells for the last week of the month
-        while (dayOfWeek < 7) {
-            html += "<td></td>";
-            dayOfWeek++;
-        }
-
-        html += "</tr></table>";
-        calendarElement.innerHTML = html;
-
-        // Add click event to calendar days
-        document.querySelectorAll('.calendar-day').forEach(day => {
-            day.addEventListener('click', function () {
-                const date = this.getAttribute('data-date');
-                const event = events.find(event => event.date === date);
-                if (event) {
-                    renderTaskList(event);
-                }
-            });
-        });
-    }
-
-    // Function to render tasks associated with a date
-    function renderTaskList(event) {
-        taskList.innerHTML = ''; // Clear the current task list
-
-        const li = document.createElement('li');
-        li.classList.add('task-item');
-        li.innerHTML = `
-            <span>${event.title}</span>
-            <button class="toggle-btn" onclick="toggleCompletion('${event.date}')">${event.completed ? 'Mark Incomplete' : 'Mark Complete'}</button>
+  // Function to render the calendar with topics
+  function renderCalendar() {
+    calendarTable.innerHTML = `
+            <tr>
+                <th>Course</th>
+                <th>Topic</th>
+                <th>Deadline</th>
+                <th>Actions</th>
+            </tr>
         `;
-        taskList.appendChild(li);
-    }
 
-    // Function to toggle completion status of a task
-    function toggleCompletion(date) {
-        const event = events.find(event => event.date === date);
-        if (event) {
-            event.completed = !event.completed;
-            renderCalendar();
-            renderTaskList(event);
-        }
-    }
+    topics.forEach((topic) => {
+      const row = document.createElement("tr");
 
-    // Initialize the calendar
+      row.innerHTML = `
+                <td>${topic.course}</td>
+                <td>${topic.name}</td>
+                <td>${topic.deadline}</td>
+                <td>
+                    <button class="edit-button" onclick="editTopic('${topic.name}')">Edit</button>
+                    <button class="delete-button" onclick="deleteTopic('${topic.name}')">Delete</button>
+                </td>
+            `;
+      calendarTable.appendChild(row);
+    });
+  }
+
+  // Function to edit a topic
+  window.editTopic = function (topicName) {
+    const topic = topics.find((t) => t.name === topicName);
+    if (topic) {
+      document.getElementById("course").value = topic.course;
+      document.getElementById("topic-name").value = topic.name;
+      document.getElementById("estimated-hours").value = topic.estimatedHours;
+      document.getElementById("topic-sequence").value = topic.sequence;
+      document.getElementById("subtopics").value = topic.subtopics.join(", ");
+      document.getElementById("deadline-date").value = topic.deadline;
+      document.getElementById("status").value = topic.status;
+      document.getElementById("action").value = "update";
+      document.getElementById("original-topic-name").value = topicName;
+    }
+  };
+
+  // Function to delete a topic
+  window.deleteTopic = function (topicName) {
+    const updatedTopics = topics.filter((t) => t.name !== topicName);
+    localStorage.setItem("topics", JSON.stringify(updatedTopics));
     renderCalendar();
+  };
+
+  // Handling the form submission for adding or updating a topic
+  addTopicForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const course = document.getElementById("course").value;
+    const topicName = document.getElementById("topic-name").value;
+    const estimatedHours = document.getElementById("estimated-hours").value;
+    const topicSequence = document.getElementById("topic-sequence").value;
+    const subtopics = document
+      .getElementById("subtopics")
+      .value.split(",")
+      .map((item) => item.trim());
+    const deadline = document.getElementById("deadline-date").value;
+    const status = document.getElementById("status").value;
+    const action = document.getElementById("action").value;
+    const originalTopicName = document.getElementById(
+      "original-topic-name"
+    ).value;
+
+    if (action === "update") {
+      const updatedTopics = topics.map((topic) => {
+        if (topic.name === originalTopicName) {
+          return {
+            course,
+            name: topicName,
+            estimatedHours,
+            sequence: topicSequence,
+            subtopics,
+            deadline,
+            status,
+          };
+        }
+        return topic;
+      });
+      localStorage.setItem("topics", JSON.stringify(updatedTopics));
+    } else {
+      const newTopic = {
+        course,
+        name: topicName,
+        estimatedHours,
+        sequence: topicSequence,
+        subtopics,
+        deadline,
+        status,
+      };
+      topics.push(newTopic);
+      localStorage.setItem("topics", JSON.stringify(topics));
+    }
+
+    addTopicForm.reset();
+    renderCalendar();
+  });
+
+  renderCalendar();
 });
