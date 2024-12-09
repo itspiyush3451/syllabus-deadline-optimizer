@@ -1,131 +1,278 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Selectors for elements
-  const courseSelect = document.getElementById("course-select");
-  const createCourseBtn = document.getElementById("create-course-btn");
-  const newCourseInput = document.getElementById("new-course-name");
-  const addSubtopicBtn = document.getElementById("add-subtopic-btn");
-  const subtopicsContainer = document.getElementById("subtopics-container");
-  const saveTopicBtn = document.getElementById("save-topic-btn");
+  const topicForm = document.getElementById("define-topic-form");
+  const topicList = document.getElementById("topic-list");
+  const topics = JSON.parse(localStorage.getItem("topics")) || [];
 
-  // Array to store subtopics
-  let subtopics = [];
+  // Function to render topics
+  function renderTopics() {
+    topicList.innerHTML = "";
 
-  /**
-   * Add a new course to the course dropdown
-   */
-  createCourseBtn.addEventListener("click", (e) => {
-    e.preventDefault();
+    topics.forEach((topic) => {
+      const topicItem = document.createElement("div");
+      topicItem.className = "topic-item";
 
-    const newCourse = newCourseInput.value.trim();
-    if (newCourse === "") {
-      alert("Please enter a course name.");
-      return;
+      const subtopicsDetails = topic.subtopics
+        .map(
+          (sub, index) =>
+            `<li>${sub} (Lecture ${topic.lectureSchedule[index]})</li>`
+        )
+        .join("");
+
+      topicItem.innerHTML = `
+        <h3>${topic.name} (${topic.course})</h3>
+        <p>Estimated Lectures: ${topic.estimatedLectures}</p>
+        <p>Sequence: ${topic.sequence}</p>
+        <p>Deadline: ${topic.deadline}</p>
+        <p>Status: ${topic.status}</p>
+        <ul>${subtopicsDetails}</ul>
+        <button onclick="editTopic('${topic.name}')">Edit</button>
+        <button onclick="deleteTopic('${topic.name}')">Delete</button>
+      `;
+
+      topicList.appendChild(topicItem);
+    });
+  }
+
+  // Function to distribute lectures among subtopics
+  function distributeLectures(totalLectures, subtopicCount) {
+    const lectures = Array(subtopicCount).fill(
+      Math.floor(totalLectures / subtopicCount)
+    );
+    let remainingLectures = totalLectures % subtopicCount;
+
+    for (let i = 0; remainingLectures > 0; i++, remainingLectures--) {
+      lectures[i]++;
     }
 
-    // Add new course to the dropdown
-    const option = document.createElement("option");
-    option.value = newCourse;
-    option.textContent = newCourse;
-    courseSelect.appendChild(option);
+    return lectures;
+  }
 
-    // Clear input field
-    newCourseInput.value = "";
-    alert(`Course "${newCourse}" added successfully.`);
-  });
+  // Add or update a topic
+  topicForm.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-  /**
-   * Add a new subtopic input field
-   */
-  addSubtopicBtn.addEventListener("click", (e) => {
-    e.preventDefault();
+    const course = document.getElementById("course").value;
+    const name = document.getElementById("topic-name").value;
+    const estimatedLectures = parseInt(
+      document.getElementById("estimated-lectures").value
+    );
+    const sequence = document.getElementById("topic-sequence").value;
+    const subtopics = document
+      .getElementById("subtopics")
+      .value.split(",")
+      .map((sub) => sub.trim());
+    const deadline = document.getElementById("deadline-date").value;
+    const status = document.getElementById("status").value;
+    const action = document.getElementById("action").value;
+    const originalTopicName = document.getElementById(
+      "original-topic-name"
+    ).value;
 
-    const subtopicIndex = subtopics.length + 1;
-    const subtopicDiv = document.createElement("div");
-    subtopicDiv.classList.add("subtopic");
+    const lectureSchedule = distributeLectures(
+      estimatedLectures,
+      subtopics.length
+    );
 
-    subtopicDiv.innerHTML = `
-            <input type="text" class="subtopic-input form-control" placeholder="Subtopic ${subtopicIndex}" />
-            <button class="remove-subtopic-btn btn btn-danger">Remove</button>
-        `;
-
-    subtopicsContainer.appendChild(subtopicDiv);
-    subtopics.push(subtopicDiv);
-
-    // Add event listener for remove button
-    subtopicDiv
-      .querySelector(".remove-subtopic-btn")
-      .addEventListener("click", (event) => {
-        event.preventDefault();
-        subtopicsContainer.removeChild(subtopicDiv);
-        subtopics = subtopics.filter((item) => item !== subtopicDiv);
+    if (action === "update") {
+      // Update existing topic
+      const updatedTopics = topics.map((topic) => {
+        if (topic.name === originalTopicName) {
+          return {
+            course,
+            name,
+            estimatedLectures,
+            sequence,
+            subtopics,
+            deadline,
+            status,
+            lectureSchedule,
+          };
+        }
+        return topic;
       });
+      localStorage.setItem("topics", JSON.stringify(updatedTopics));
+    } else {
+      // Add new topic
+      const newTopic = {
+        course,
+        name,
+        estimatedLectures,
+        sequence,
+        subtopics,
+        deadline,
+        status,
+        lectureSchedule,
+      };
+      topics.push(newTopic);
+      localStorage.setItem("topics", JSON.stringify(topics));
+    }
+
+    topicForm.reset();
+    renderTopics();
   });
 
-  /**
-   * Save or update the topic
-   */
-  saveTopicBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    // Gather form data
-    const selectedCourse = courseSelect.value;
-    const topicName = document.getElementById("topic-name").value.trim();
-    const estimatedHours = document
-      .getElementById("estimated-hours")
-      .value.trim();
-    const topicSequence = document
-      .getElementById("topic-sequence")
-      .value.trim();
-    const deadlineDate = document.getElementById("deadline-date").value;
-
-    // Validate required fields
-    if (!selectedCourse) {
-      alert("Please select or create a course.");
-      return;
+  // Edit a topic
+  window.editTopic = function (topicName) {
+    const topic = topics.find((t) => t.name === topicName);
+    if (topic) {
+      document.getElementById("course").value = topic.course;
+      document.getElementById("topic-name").value = topic.name;
+      document.getElementById("estimated-lectures").value =
+        topic.estimatedLectures;
+      document.getElementById("topic-sequence").value = topic.sequence;
+      document.getElementById("subtopics").value = topic.subtopics.join(", ");
+      document.getElementById("deadline-date").value = topic.deadline;
+      document.getElementById("status").value = topic.status;
+      document.getElementById("action").value = "update";
+      document.getElementById("original-topic-name").value = topicName;
     }
-    if (!topicName) {
-      alert("Please enter a topic name.");
-      return;
-    }
-    if (!estimatedHours || isNaN(estimatedHours) || estimatedHours <= 0) {
-      alert("Please enter a valid estimated hours.");
-      return;
-    }
-    if (!topicSequence || isNaN(topicSequence) || topicSequence <= 0) {
-      alert("Please enter a valid topic sequence.");
-      return;
-    }
-    if (!deadlineDate) {
-      alert("Please select a deadline date.");
-      return;
+  };
+
+  // Delete a topic
+  window.deleteTopic = function (topicName) {
+    const updatedTopics = topics.filter((t) => t.name !== topicName);
+    localStorage.setItem("topics", JSON.stringify(updatedTopics));
+    renderTopics();
+  };
+
+  renderTopics();
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const topicForm = document.getElementById("define-topic-form");
+  const topicList = document.getElementById("topic-list");
+  const topics = JSON.parse(localStorage.getItem("topics")) || [];
+
+  // Function to render topics
+  function renderTopics() {
+    topicList.innerHTML = "";
+
+    topics.forEach((topic) => {
+      const topicItem = document.createElement("div");
+      topicItem.className = "topic-item";
+
+      const subtopicsDetails = topic.subtopics
+        .map(
+          (sub, index) =>
+            `<li>${sub} (Lecture ${topic.lectureSchedule[index]})</li>`
+        )
+        .join("");
+
+      topicItem.innerHTML = `
+        <h3>${topic.name} (${topic.course})</h3>
+        <p>Estimated Lectures: ${topic.estimatedLectures}</p>
+        <p>Sequence: ${topic.sequence}</p>
+        <p>Deadline: ${topic.deadline}</p>
+        <p>Status: ${topic.status}</p>
+        <ul>${subtopicsDetails}</ul>
+        <button onclick="editTopic('${topic.name}')">Edit</button>
+        <button onclick="deleteTopic('${topic.name}')">Delete</button>
+      `;
+
+      topicList.appendChild(topicItem);
+    });
+  }
+
+  // Function to distribute lectures among subtopics
+  function distributeLectures(totalLectures, subtopicCount) {
+    const lectures = Array(subtopicCount).fill(
+      Math.floor(totalLectures / subtopicCount)
+    );
+    let remainingLectures = totalLectures % subtopicCount;
+
+    for (let i = 0; remainingLectures > 0; i++, remainingLectures--) {
+      lectures[i]++;
     }
 
-    // Collect subtopics
-    const subtopicInputs = document.querySelectorAll(".subtopic-input");
-    const subtopicsData = Array.from(subtopicInputs)
-      .map((input) => input.value.trim())
-      .filter(Boolean);
+    return lectures;
+  }
 
-    // Prepare topic data
-    const topicData = {
-      course: selectedCourse,
-      topicName: topicName,
-      estimatedHours: Number(estimatedHours),
-      sequence: Number(topicSequence),
-      subtopics: subtopicsData,
-      deadline: deadlineDate,
-    };
+  // Add or update a topic
+  topicForm.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-    // For now, log the topic data
-    console.log("Saved Topic:", topicData);
-    alert("Topic saved successfully!");
+    const course = document.getElementById("course").value;
+    const name = document.getElementById("topic-name").value;
+    const estimatedLectures = parseInt(
+      document.getElementById("estimated-lectures").value
+    );
+    const sequence = document.getElementById("topic-sequence").value;
+    const subtopics = document
+      .getElementById("subtopics")
+      .value.split(",")
+      .map((sub) => sub.trim());
+    const deadline = document.getElementById("deadline-date").value;
+    const status = document.getElementById("status").value;
+    const action = document.getElementById("action").value;
+    const originalTopicName = document.getElementById(
+      "original-topic-name"
+    ).value;
 
-    // Clear inputs (if needed)
-    document.getElementById("topic-name").value = "";
-    document.getElementById("estimated-hours").value = "";
-    document.getElementById("topic-sequence").value = "";
-    document.getElementById("deadline-date").value = "";
-    subtopicsContainer.innerHTML = "";
-    subtopics = [];
+    const lectureSchedule = distributeLectures(
+      estimatedLectures,
+      subtopics.length
+    );
+
+    if (action === "update") {
+      // Update existing topic
+      const updatedTopics = topics.map((topic) => {
+        if (topic.name === originalTopicName) {
+          return {
+            course,
+            name,
+            estimatedLectures,
+            sequence,
+            subtopics,
+            deadline,
+            status,
+            lectureSchedule,
+          };
+        }
+        return topic;
+      });
+      localStorage.setItem("topics", JSON.stringify(updatedTopics));
+    } else {
+      // Add new topic
+      const newTopic = {
+        course,
+        name,
+        estimatedLectures,
+        sequence,
+        subtopics,
+        deadline,
+        status,
+        lectureSchedule,
+      };
+      topics.push(newTopic);
+      localStorage.setItem("topics", JSON.stringify(topics));
+    }
+
+    topicForm.reset();
+    renderTopics();
   });
+
+  // Edit a topic
+  window.editTopic = function (topicName) {
+    const topic = topics.find((t) => t.name === topicName);
+    if (topic) {
+      document.getElementById("course").value = topic.course;
+      document.getElementById("topic-name").value = topic.name;
+      document.getElementById("estimated-lectures").value =
+        topic.estimatedLectures;
+      document.getElementById("topic-sequence").value = topic.sequence;
+      document.getElementById("subtopics").value = topic.subtopics.join(", ");
+      document.getElementById("deadline-date").value = topic.deadline;
+      document.getElementById("status").value = topic.status;
+      document.getElementById("action").value = "update";
+      document.getElementById("original-topic-name").value = topicName;
+    }
+  };
+
+  // Delete a topic
+  window.deleteTopic = function (topicName) {
+    const updatedTopics = topics.filter((t) => t.name !== topicName);
+    localStorage.setItem("topics", JSON.stringify(updatedTopics));
+    renderTopics();
+  };
+
+  renderTopics();
 });
