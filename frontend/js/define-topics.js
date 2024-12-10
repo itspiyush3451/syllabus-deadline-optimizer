@@ -1,278 +1,110 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const topicForm = document.getElementById("define-topic-form");
-  const topicList = document.getElementById("topic-list");
-  const topics = JSON.parse(localStorage.getItem("topics")) || [];
+document.addEventListener("DOMContentLoaded", function () {
+  const createCourseBtn = document.getElementById("create-course-btn");
+  const courseSelect = document.getElementById("course-select");
+  const addModuleBtn = document.getElementById("add-module-btn");
+  const moduleContainer = document.getElementById("module-container");
 
-  // Function to render topics
-  function renderTopics() {
-    topicList.innerHTML = "";
+  // Add course functionality
+  createCourseBtn.addEventListener("click", function () {
+    const newCourseName = document.getElementById("new-course-name").value;
 
-    topics.forEach((topic) => {
-      const topicItem = document.createElement("div");
-      topicItem.className = "topic-item";
-
-      const subtopicsDetails = topic.subtopics
-        .map(
-          (sub, index) =>
-            `<li>${sub} (Lecture ${topic.lectureSchedule[index]})</li>`
-        )
-        .join("");
-
-      topicItem.innerHTML = `
-        <h3>${topic.name} (${topic.course})</h3>
-        <p>Estimated Lectures: ${topic.estimatedLectures}</p>
-        <p>Sequence: ${topic.sequence}</p>
-        <p>Deadline: ${topic.deadline}</p>
-        <p>Status: ${topic.status}</p>
-        <ul>${subtopicsDetails}</ul>
-        <button onclick="editTopic('${topic.name}')">Edit</button>
-        <button onclick="deleteTopic('${topic.name}')">Delete</button>
-      `;
-
-      topicList.appendChild(topicItem);
-    });
-  }
-
-  // Function to distribute lectures among subtopics
-  function distributeLectures(totalLectures, subtopicCount) {
-    const lectures = Array(subtopicCount).fill(
-      Math.floor(totalLectures / subtopicCount)
-    );
-    let remainingLectures = totalLectures % subtopicCount;
-
-    for (let i = 0; remainingLectures > 0; i++, remainingLectures--) {
-      lectures[i]++;
+    if (!newCourseName) {
+      alert("Please enter a course name.");
+      return;
     }
 
-    return lectures;
-  }
-
-  // Add or update a topic
-  topicForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const course = document.getElementById("course").value;
-    const name = document.getElementById("topic-name").value;
-    const estimatedLectures = parseInt(
-      document.getElementById("estimated-lectures").value
-    );
-    const sequence = document.getElementById("topic-sequence").value;
-    const subtopics = document
-      .getElementById("subtopics")
-      .value.split(",")
-      .map((sub) => sub.trim());
-    const deadline = document.getElementById("deadline-date").value;
-    const status = document.getElementById("status").value;
-    const action = document.getElementById("action").value;
-    const originalTopicName = document.getElementById(
-      "original-topic-name"
-    ).value;
-
-    const lectureSchedule = distributeLectures(
-      estimatedLectures,
-      subtopics.length
-    );
-
-    if (action === "update") {
-      // Update existing topic
-      const updatedTopics = topics.map((topic) => {
-        if (topic.name === originalTopicName) {
-          return {
-            course,
-            name,
-            estimatedLectures,
-            sequence,
-            subtopics,
-            deadline,
-            status,
-            lectureSchedule,
-          };
+    // AJAX request to add the course to the backend
+    fetch("/api/courses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: newCourseName }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to add course");
         }
-        return topic;
-      });
-      localStorage.setItem("topics", JSON.stringify(updatedTopics));
-    } else {
-      // Add new topic
-      const newTopic = {
-        course,
-        name,
-        estimatedLectures,
-        sequence,
-        subtopics,
-        deadline,
-        status,
-        lectureSchedule,
-      };
-      topics.push(newTopic);
-      localStorage.setItem("topics", JSON.stringify(topics));
-    }
-
-    topicForm.reset();
-    renderTopics();
+        return response.json(); // Only attempt to parse if the response is valid
+      })
+      .then((data) => {
+        if (data) {
+          const option = document.createElement("option");
+          option.value = data.id; // assuming `id` is returned from the backend
+          option.textContent = data.name; // assuming `name` is returned from the backend
+          courseSelect.appendChild(option);
+          document.getElementById("new-course-name").value = "";
+          alert("Course added successfully!");
+        } else {
+          alert("Course creation failed.");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
   });
 
-  // Edit a topic
-  window.editTopic = function (topicName) {
-    const topic = topics.find((t) => t.name === topicName);
-    if (topic) {
-      document.getElementById("course").value = topic.course;
-      document.getElementById("topic-name").value = topic.name;
-      document.getElementById("estimated-lectures").value =
-        topic.estimatedLectures;
-      document.getElementById("topic-sequence").value = topic.sequence;
-      document.getElementById("subtopics").value = topic.subtopics.join(", ");
-      document.getElementById("deadline-date").value = topic.deadline;
-      document.getElementById("status").value = topic.status;
-      document.getElementById("action").value = "update";
-      document.getElementById("original-topic-name").value = topicName;
-    }
-  };
+  // Add module functionality
+  addModuleBtn.addEventListener("click", function () {
+    const moduleDiv = document.createElement("div");
+    moduleDiv.classList.add("modules");
 
-  // Delete a topic
-  window.deleteTopic = function (topicName) {
-    const updatedTopics = topics.filter((t) => t.name !== topicName);
-    localStorage.setItem("topics", JSON.stringify(updatedTopics));
-    renderTopics();
-  };
+    const input = document.createElement("input");
+    input.type = "text";
+    input.classList.add("module-name", "form-control");
+    input.placeholder = "Enter module name";
+    moduleDiv.appendChild(input);
 
-  renderTopics();
-});
-document.addEventListener("DOMContentLoaded", () => {
-  const topicForm = document.getElementById("define-topic-form");
-  const topicList = document.getElementById("topic-list");
-  const topics = JSON.parse(localStorage.getItem("topics")) || [];
-
-  // Function to render topics
-  function renderTopics() {
-    topicList.innerHTML = "";
-
-    topics.forEach((topic) => {
-      const topicItem = document.createElement("div");
-      topicItem.className = "topic-item";
-
-      const subtopicsDetails = topic.subtopics
-        .map(
-          (sub, index) =>
-            `<li>${sub} (Lecture ${topic.lectureSchedule[index]})</li>`
-        )
-        .join("");
-
-      topicItem.innerHTML = `
-        <h3>${topic.name} (${topic.course})</h3>
-        <p>Estimated Lectures: ${topic.estimatedLectures}</p>
-        <p>Sequence: ${topic.sequence}</p>
-        <p>Deadline: ${topic.deadline}</p>
-        <p>Status: ${topic.status}</p>
-        <ul>${subtopicsDetails}</ul>
-        <button onclick="editTopic('${topic.name}')">Edit</button>
-        <button onclick="deleteTopic('${topic.name}')">Delete</button>
-      `;
-
-      topicList.appendChild(topicItem);
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.classList.add("btn", "btn-danger", "remove-module-btn");
+    removeBtn.textContent = "Remove";
+    removeBtn.addEventListener("click", function () {
+      moduleDiv.remove();
     });
-  }
+    moduleDiv.appendChild(removeBtn);
 
-  // Function to distribute lectures among subtopics
-  function distributeLectures(totalLectures, subtopicCount) {
-    const lectures = Array(subtopicCount).fill(
-      Math.floor(totalLectures / subtopicCount)
-    );
-    let remainingLectures = totalLectures % subtopicCount;
-
-    for (let i = 0; remainingLectures > 0; i++, remainingLectures--) {
-      lectures[i]++;
-    }
-
-    return lectures;
-  }
-
-  // Add or update a topic
-  topicForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const course = document.getElementById("course").value;
-    const name = document.getElementById("topic-name").value;
-    const estimatedLectures = parseInt(
-      document.getElementById("estimated-lectures").value
-    );
-    const sequence = document.getElementById("topic-sequence").value;
-    const subtopics = document
-      .getElementById("subtopics")
-      .value.split(",")
-      .map((sub) => sub.trim());
-    const deadline = document.getElementById("deadline-date").value;
-    const status = document.getElementById("status").value;
-    const action = document.getElementById("action").value;
-    const originalTopicName = document.getElementById(
-      "original-topic-name"
-    ).value;
-
-    const lectureSchedule = distributeLectures(
-      estimatedLectures,
-      subtopics.length
-    );
-
-    if (action === "update") {
-      // Update existing topic
-      const updatedTopics = topics.map((topic) => {
-        if (topic.name === originalTopicName) {
-          return {
-            course,
-            name,
-            estimatedLectures,
-            sequence,
-            subtopics,
-            deadline,
-            status,
-            lectureSchedule,
-          };
-        }
-        return topic;
-      });
-      localStorage.setItem("topics", JSON.stringify(updatedTopics));
-    } else {
-      // Add new topic
-      const newTopic = {
-        course,
-        name,
-        estimatedLectures,
-        sequence,
-        subtopics,
-        deadline,
-        status,
-        lectureSchedule,
-      };
-      topics.push(newTopic);
-      localStorage.setItem("topics", JSON.stringify(topics));
-    }
-
-    topicForm.reset();
-    renderTopics();
+    moduleContainer.appendChild(moduleDiv);
   });
 
-  // Edit a topic
-  window.editTopic = function (topicName) {
-    const topic = topics.find((t) => t.name === topicName);
-    if (topic) {
-      document.getElementById("course").value = topic.course;
-      document.getElementById("topic-name").value = topic.name;
-      document.getElementById("estimated-lectures").value =
-        topic.estimatedLectures;
-      document.getElementById("topic-sequence").value = topic.sequence;
-      document.getElementById("subtopics").value = topic.subtopics.join(", ");
-      document.getElementById("deadline-date").value = topic.deadline;
-      document.getElementById("status").value = topic.status;
-      document.getElementById("action").value = "update";
-      document.getElementById("original-topic-name").value = topicName;
-    }
-  };
+  // Prevent form submission and handle topic save/update
+  const form = document.getElementById("define-topic-form");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  // Delete a topic
-  window.deleteTopic = function (topicName) {
-    const updatedTopics = topics.filter((t) => t.name !== topicName);
-    localStorage.setItem("topics", JSON.stringify(updatedTopics));
-    renderTopics();
-  };
+    const data = {
+      course: courseSelect.value,
+      subjectName: document.getElementById("subject-name").value,
+      estimatedLectures: document.getElementById("estimated-lectures").value,
+      chapterSequence: document.getElementById("chapter-sequence").value,
+      modules: Array.from(document.querySelectorAll(".module-name")).map(
+        (input) => input.value
+      ),
+      deadlineDate: document.getElementById("deadline-date").value,
+    };
 
-  renderTopics();
+    fetch("/api/topics", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to save topic");
+        }
+        return response.json(); // Ensure a valid JSON response
+      })
+      .then((data) => {
+        if (data) {
+          alert("Topic saved successfully!");
+          form.reset(); // Reset the form after successful submission
+        } else {
+          alert("Failed to save the topic.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("An error occurred while saving the topic.");
+      });
+  });
 });

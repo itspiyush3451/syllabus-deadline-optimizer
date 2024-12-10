@@ -22,7 +22,6 @@
               id="new-course-name"
               class="form-control"
               placeholder="Enter course name"
-              required
             />
             <button
               id="create-course-btn"
@@ -43,14 +42,14 @@
           </select>
         </div>
 
-        <!-- Topic Name -->
+        <!-- Subject Name -->
         <div class="form-group">
           <label for="subject-name">Subject Name</label>
           <input
             type="text"
             id="subject-name"
             class="form-control"
-            placeholder="Enter subject-name"
+            placeholder="Enter subject name"
             required
           />
         </div>
@@ -68,20 +67,20 @@
           />
         </div>
 
-        <!-- Topic Sequence -->
+        <!-- Chapter Sequence -->
         <div class="form-group">
           <label for="chapter-sequence">Chapter Sequence</label>
           <input
             type="number"
             id="chapter-sequence"
             class="form-control"
-            placeholder="Enter sequence number"
+            placeholder="Enter chapter sequence"
             min="1"
             required
           />
         </div>
 
-        <!-- Subtopics -->
+        <!-- Modules -->
         <div class="form-group">
           <label>Modules</label>
           <div id="module-container">
@@ -111,10 +110,10 @@
           >
         </div>
 
-        <!-- Save/Update Topic -->
+        <!-- Save Topic -->
         <div class="form-group form-actions">
           <button id="save-module-btn" type="submit" class="btn btn-primary">
-            Save Module
+            Save Topic
           </button>
         </div>
       </form>

@@ -14,19 +14,15 @@ public class TopicService {
     @Autowired
     private TopicRepository topicRepository;
 
-    public List<Topic> getAllTopics() {
-        return topicRepository.findAll();
+    public Topic createTopic(Topic topic) {
+        return topicRepository.save(topic);
+    }
+
+    public List<Topic> getTopicsByCourseId(Long courseId) {
+        return topicRepository.findByCourseId(courseId);
     }
 
     public Optional<Topic> getTopicById(Long id) {
         return topicRepository.findById(id);
-    }
-
-    public Topic saveTopic(Topic topic) {
-        return topicRepository.save(topic);
-    }
-
-    public void deleteTopic(Long id) {
-        topicRepository.deleteById(id);
     }
 }

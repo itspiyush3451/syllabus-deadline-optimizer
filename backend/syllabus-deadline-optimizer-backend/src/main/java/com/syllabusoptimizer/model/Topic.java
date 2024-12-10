@@ -1,12 +1,6 @@
 package com.syllabusoptimizer.model;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-import java.time.LocalDate;
+import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
@@ -16,12 +10,17 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String course;
-    private Integer estimatedHours;
-    private Integer sequence;
-    private List<String> subtopics;  // Changed to List of strings
-    private LocalDate deadline;      // Changed to LocalDate
+    private String subjectName;
+    private int estimatedLectures;
+    private int chapterSequence;
+    private String deadlineDate;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
+
+    @ElementCollection
+    private List<String> modules;
 
     // Getters and Setters
     public Long getId() {
@@ -32,51 +31,51 @@ public class Topic {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getSubjectName() {
+        return subjectName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 
-    public String getCourse() {
+    public int getEstimatedLectures() {
+        return estimatedLectures;
+    }
+
+    public void setEstimatedLectures(int estimatedLectures) {
+        this.estimatedLectures = estimatedLectures;
+    }
+
+    public int getChapterSequence() {
+        return chapterSequence;
+    }
+
+    public void setChapterSequence(int chapterSequence) {
+        this.chapterSequence = chapterSequence;
+    }
+
+    public String getDeadlineDate() {
+        return deadlineDate;
+    }
+
+    public void setDeadlineDate(String deadlineDate) {
+        this.deadlineDate = deadlineDate;
+    }
+
+    public Course getCourse() {
         return course;
     }
 
-    public void setCourse(String course) {
+    public void setCourse(Course course) {
         this.course = course;
     }
 
-    public Integer getEstimatedHours() {
-        return estimatedHours;
+    public List<String> getModules() {
+        return modules;
     }
 
-    public void setEstimatedHours(Integer estimatedHours) {
-        this.estimatedHours = estimatedHours;
-    }
-
-    public Integer getSequence() {
-        return sequence;
-    }
-
-    public void setSequence(Integer sequence) {
-        this.sequence = sequence;
-    }
-
-    public List<String> getSubtopics() {
-        return subtopics;
-    }
-
-    public void setSubtopics(List<String> subtopics) {
-        this.subtopics = subtopics;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
+    public void setModules(List<String> modules) {
+        this.modules = modules;
     }
 }
