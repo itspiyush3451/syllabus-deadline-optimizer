@@ -4,10 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Define Topic</title>
-    <!-- Link to CSS -->
     <link rel="stylesheet" href="../../css/style.css" />
   </head>
-  <body>
+  <body class="define-topic-page">
     <div class="container">
       <header class="page-header">
         <h1>Define Topic</h1>
@@ -46,12 +45,12 @@
 
         <!-- Topic Name -->
         <div class="form-group">
-          <label for="topic-name">Topic Name</label>
+          <label for="subject-name">Subject Name</label>
           <input
             type="text"
-            id="topic-name"
+            id="subject-name"
             class="form-control"
-            placeholder="Enter topic name"
+            placeholder="Enter subject-name"
             required
           />
         </div>
@@ -71,10 +70,10 @@
 
         <!-- Topic Sequence -->
         <div class="form-group">
-          <label for="topic-sequence">Topic Sequence</label>
+          <label for="chapter-sequence">Chapter Sequence</label>
           <input
             type="number"
-            id="topic-sequence"
+            id="chapter-sequence"
             class="form-control"
             placeholder="Enter sequence number"
             min="1"
@@ -84,22 +83,22 @@
 
         <!-- Subtopics -->
         <div class="form-group">
-          <label>Subtopics</label>
-          <div id="subtopics-container">
-            <div class="subtopic">
+          <label>Modules</label>
+          <div id="module-container">
+            <div class="modules">
               <input
                 type="text"
-                class="subtopic-name form-control"
-                placeholder="Enter subtopic name"
+                class="module-name form-control"
+                placeholder="Enter module name"
                 required
               />
-              <button type="button" class="btn btn-danger remove-subtopic-btn">
+              <button type="button" class="btn btn-danger remove-module-btn">
                 Remove
               </button>
             </div>
           </div>
-          <button id="add-subtopic-btn" type="button" class="btn btn-secondary">
-            Add Subtopic
+          <button id="add-module-btn" type="button" class="btn btn-secondary">
+            Add Module
           </button>
         </div>
 
@@ -114,135 +113,8 @@
 
         <!-- Save/Update Topic -->
         <div class="form-group form-actions">
-          <button id="save-topic-btn" type="submit" class="btn btn-primary">
-            Save Topic
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Link to JavaScript -->
-    <script src="../../js/define-topics.js"></script>
-  </body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Define Topic</title>
-    <!-- Link to CSS -->
-    <link rel="stylesheet" href="../../css/style.css" />
-  </head>
-  <body>
-    <div class="container">
-      <header class="page-header">
-        <h1>Define Topic</h1>
-      </header>
-
-      <form id="define-topic-form" class="form-container">
-        <!-- Create New Course -->
-        <div class="form-group">
-          <label for="new-course-name">Create New Course</label>
-          <div class="create-course">
-            <input
-              type="text"
-              id="new-course-name"
-              class="form-control"
-              placeholder="Enter course name"
-              required
-            />
-            <button
-              id="create-course-btn"
-              type="button"
-              class="btn btn-secondary"
-            >
-              Add Course
-            </button>
-          </div>
-        </div>
-
-        <!-- Course Selection -->
-        <div class="form-group">
-          <label for="course-select">Select Course</label>
-          <select id="course-select" class="form-control" required>
-            <option value="" disabled selected>Select a course</option>
-            <!-- Dynamically populated options -->
-          </select>
-        </div>
-
-        <!-- Topic Name -->
-        <div class="form-group">
-          <label for="topic-name">Topic Name</label>
-          <input
-            type="text"
-            id="topic-name"
-            class="form-control"
-            placeholder="Enter topic name"
-            required
-          />
-        </div>
-
-        <!-- Estimated Lectures -->
-        <div class="form-group">
-          <label for="estimated-lectures">Estimated Lectures</label>
-          <input
-            type="number"
-            id="estimated-lectures"
-            class="form-control"
-            placeholder="Enter estimated lectures"
-            min="1"
-            required
-          />
-        </div>
-
-        <!-- Topic Sequence -->
-        <div class="form-group">
-          <label for="topic-sequence">Topic Sequence</label>
-          <input
-            type="number"
-            id="topic-sequence"
-            class="form-control"
-            placeholder="Enter sequence number"
-            min="1"
-            required
-          />
-        </div>
-
-        <!-- Subtopics -->
-        <div class="form-group">
-          <label>Subtopics</label>
-          <div id="subtopics-container">
-            <div class="subtopic">
-              <input
-                type="text"
-                class="subtopic-name form-control"
-                placeholder="Enter subtopic name"
-                required
-              />
-              <button type="button" class="btn btn-danger remove-subtopic-btn">
-                Remove
-              </button>
-            </div>
-          </div>
-          <button id="add-subtopic-btn" type="button" class="btn btn-secondary">
-            Add Subtopic
-          </button>
-        </div>
-
-        <!-- Deadline Date -->
-        <div class="form-group">
-          <label for="deadline-date">Deadline Date</label>
-          <input type="date" id="deadline-date" class="form-control" required />
-          <small
-            >Note: Weekends and holidays will be automatically adjusted.</small
-          >
-        </div>
-
-        <!-- Save/Update Topic -->
-        <div class="form-group form-actions">
-          <button id="save-topic-btn" type="submit" class="btn btn-primary">
-            Save Topic
+          <button id="save-module-btn" type="submit" class="btn btn-primary">
+            Save Module
           </button>
         </div>
       </form>

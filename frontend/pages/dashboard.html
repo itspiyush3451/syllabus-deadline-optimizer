@@ -1,40 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Teacher Dashboard</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+
+  <body class="dashboard-page">
     <header>
-        <h1>Teacher Dashboard</h1>
+      <a href="/index.html" class="home"
+        ><h1>Academic Syllabus Deadline Optimizer</h1></a
+      >
+      <nav class="navbar">
+        <a href="/pages/login.html" class="button">Login</a>
+        <a href="/pages/register.html" class="button">Register</a>
+        <a href="/pages/dashboard.html" class="button">Dashboard</a>
+        <a href="/pages/syllabus-management/index.html" class="button"
+          >Syllabus Management</a
+        >
+      </nav>
     </header>
     <main class="dashboard-container">
-        <section class="welcome-section">
-            <h2>Welcome, [Teacher's Name]</h2>
-            <p>Manage your syllabus, track progress, and plan your schedule all in one place.</p>
-        </section>
-        <section class="actions-container">
-            <div class="action-card">
-                <h3>Syllabus Management</h3>
-                <p>Set up, define, and organize topics for your syllabus.</p>
-                <a href="syllabus-management/index.html" class="button">Manage Syllabus</a>
-            </div>
-            <div class="action-card">
-                <h3>Progress Tracking</h3>
-                <p>Track your progress and monitor completed topics.</p>
-                <a href="syllabus-management/progress.html" class="button">Track Progress</a>
-            </div>
-            <div class="action-card">
-                <h3>Schedule Planning</h3>
-                <p>Organize and schedule your lectures effectively.</p>
-                <a href="syllabus-management/calendar.html" class="button">Plan Schedule</a>
-            </div>
-        </section>
+      <section class="welcome-section">
+        <h2>Welcome, [Teacher's Name]</h2>
+        <p>
+          Manage your syllabus, track progress, and plan your schedule all in
+          one place.
+        </p>
+      </section>
+      <section class="actions-container">
+        <div class="action-card">
+          <h3>Syllabus Management</h3>
+          <p>Set up, define, and organize topics for your syllabus.</p>
+          <a href="syllabus-management/index.html" class="button"
+            >Manage Syllabus</a
+          >
+        </div>
+        <div class="action-card">
+          <h3>Progress Tracking</h3>
+          <p>Track your progress and monitor completed topics.</p>
+          <a href="syllabus-management/progress.html" class="button"
+            >Track Progress</a
+          >
+        </div>
+        <div class="action-card">
+          <h3>Schedule Planning</h3>
+          <p>Organize and schedule your lectures effectively.</p>
+          <a href="syllabus-management/calendar.html" class="button"
+            >Plan Schedule</a
+          >
+        </div>
+      </section>
     </main>
     <footer>
-        <p>&copy; 2024 Syllabus Deadline Optimizer. All rights reserved.</p>
+      <p>&copy; 2024 Syllabus Deadline Optimizer. All rights reserved.</p>
     </footer>
-</body>
+  </body>
 </html>

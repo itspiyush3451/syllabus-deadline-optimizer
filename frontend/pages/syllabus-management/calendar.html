@@ -7,16 +7,16 @@
     <link rel="stylesheet" href="../../css/style.css" />
     <script defer src="../../js/calendar.js"></script>
   </head>
-  <body>
+  <body class="calendar-page">
     <div class="container">
       <h1>Course Calendar</h1>
       <table id="calendar-table" class="calendar-table">
         <!-- Table content will be populated by JS -->
       </table>
 
-      <h2>Add/Update Topic</h2>
-      <form id="add-topic-form">
-        <input type="hidden" id="original-topic-name" />
+      <h2>Add/Update Subject</h2>
+      <form id="add-subject-form">
+        <input type="hidden" id="original-subject-name" />
         <input type="hidden" id="action" value="add" />
 
         <!-- Course Selection -->
@@ -24,8 +24,8 @@
         <input type="text" id="course" class="form-control" required />
 
         <!-- Topic Name -->
-        <label for="topic-name">Topic Name:</label>
-        <input type="text" id="topic-name" class="form-control" required />
+        <label for="subject-name">Subject Name:</label>
+        <input type="text" id="subject-name" class="form-control" required />
 
         <!-- Estimated Lectures -->
         <label for="estimated-lectures">Estimated Lectures:</label>
@@ -38,22 +38,22 @@
         />
 
         <!-- Topic Sequence -->
-        <label for="topic-sequence">Topic Sequence:</label>
+        <label for="chapter-sequence">Chapter Sequence:</label>
         <input
           type="number"
-          id="topic-sequence"
+          id="chapter-sequence"
           class="form-control"
           min="1"
           required
         />
 
         <!-- Subtopics -->
-        <label for="subtopics">Subtopics (comma-separated):</label>
+        <label for="modules">Modules (comma-separated):</label>
         <input
           type="text"
-          id="subtopics"
+          id="modules"
           class="form-control"
-          placeholder="Enter subtopics separated by commas"
+          placeholder="Enter modules separated by commas"
           required
         />
 
@@ -69,7 +69,9 @@
           <option value="Completed">Completed</option>
         </select>
 
-        <button type="submit" class="btn btn-primary">Save/Update Topic</button>
+        <button type="submit" class="btn btn-primary">
+          Save/Update Module
+        </button>
       </form>
     </div>
   </body>

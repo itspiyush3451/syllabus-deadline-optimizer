@@ -1,52 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Syllabus Management</title>
-    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/style.css" />
     <script src="../../js/app.js" defer></script>
     <script src="../../js/define-topics.js" defer></script>
     <script src="../../js/progress.js" defer></script>
     <script src="../../js/calendar.js" defer></script>
-</head>
-<body>
+  </head>
+  <body class="syllabus-management-page">
     <header>
-        <div class="header-container">
-            <h1>Syllabus Management</h1>
-            <div class="button-container">
-                <a href="define-topics.html" class="btn btn-hover">Define Topics</a>
-                <a href="progress.html" class="btn btn-hover">Progress Tracker</a>
-                <a href="calendar.html" class="btn btn-hover">Calendar View</a>
-            </div>
-        </div>
+      <a href="/index.html" class="home"
+        ><h1>Academic Syllabus Deadline Optimizer</h1></a
+      >
+      <nav class="navbar">
+        <a href="define-topics.html" class="button">Define Topics</a>
+        <a href="progress.html" class="button">Progress Tracker</a>
+        <a href="calendar.html" class="button">Calendar View</a>
+        <!-- <a href="pages/syllabus-management/index.html" class="button">Syllabus Management</a> -->
+      </nav>
     </header>
 
     <main>
-        <section class="syllabus-dashboard">
-            <div class="welcome-message">
-                <h2>Welcome to Syllabus Management!</h2>
-                <p>Manage your course syllabus, define topics, track progress, and stay on top of deadlines.</p>
-            </div>
+      <section class="syllabus-dashboard">
+        <div class="welcome-message">
+          <h2>Welcome to Syllabus Management!</h2>
+          <p>
+            Manage your course syllabus, define topics, track progress, and stay
+            on top of deadlines.
+          </p>
+        </div>
 
-            <section class="functionality-info">
-                <h2>Available Features</h2>
-                <ul>
-                    <li><strong>Define Topics:</strong> Define course topics and their deadlines.</li>
-                    <li><strong>Progress Tracker:</strong> Track your progress and mark topics as completed.</li>
-                    <li><strong>Calendar View:</strong> See your syllabus and deadlines in a calendar format.</li>
-                </ul>
-            </section>
-
-            <section class="task-status">
-                <h2>Task Status</h2>
-                <p>Use the sections above to start defining topics, tracking progress, and viewing your syllabus calendar.</p>
-            </section>
+        <section class="functionality-info">
+          <h2>Available Features</h2>
+          <ul>
+            <li>
+              <strong>Define Topics:</strong> Define course topics and their
+              deadlines.
+            </li>
+            <li>
+              <strong>Progress Tracker:</strong> Track your progress and mark
+              topics as completed.
+            </li>
+            <li>
+              <strong>Calendar View:</strong> See your syllabus and deadlines in
+              a calendar format.
+            </li>
+          </ul>
         </section>
+
+        <section class="task-status">
+          <h2>Task Status</h2>
+          <p>
+            Use the sections above to start defining topics, tracking progress,
+            and viewing your syllabus calendar.
+          </p>
+        </section>
+      </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 Syllabus Deadline Optimizer</p>
+      <p>&copy; 2024 Syllabus Deadline Optimizer</p>
     </footer>
-</body>
+  </body>
 </html>
