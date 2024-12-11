@@ -1,18 +1,26 @@
 package com.syllabusoptimizer.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
-public class CorsConfig implements WebMvcConfigurer {
+public class CorsConfig {
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")                               // Allow all endpoints
-                .allowedOrigins("http://127.0.0.1:5500")         // Allow frontend URL
-                .allowedMethods("GET", "POST", "PUT", "DELETE")  // Allowed HTTP methods
-                .allowedHeaders("*")                             // Allow all headers
-                .allowCredentials(true);                         // Allow credentials (cookies, auth)
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500")); // Frontend origin
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

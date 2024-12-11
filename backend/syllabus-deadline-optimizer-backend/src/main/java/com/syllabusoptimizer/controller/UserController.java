@@ -1,54 +1,30 @@
 package com.syllabusoptimizer.controller;
 
-import com.syllabusoptimizer.LoginRequest;
 import com.syllabusoptimizer.model.User;
 import com.syllabusoptimizer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@CrossOrigin
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;  // Injecting passwordEncoder
-
-    // Method to register user
+    // Register user
     @PostMapping("/register")
-    public String registerUser(@RequestParam String username,
-                               @RequestParam String email,
-                               @RequestParam String password) {
-        // Encrypt the password before saving it
-        String encryptedPassword = passwordEncoder.encode(password);
-
-        User user = new User(username, email, encryptedPassword);
-        userService.save(user);
-
-        return "User registered successfully!";
-    } @Autowired
-
-
-
+    public User register(@RequestBody User user) {
+        return userService.registerUser(user);
+    }
 
     // Login user
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        // Retrieve user by username (or email)
-        User user = userService.getUserByUsername(loginRequest.getUsername());
+    public User login(@RequestBody User loginRequest) {
+        String usernameOrEmail = loginRequest.getEmail(); // Assuming `email` field is used for usernameOrEmail
+        String password = loginRequest.getPassword();
 
-        // Check if the user exists and if the password matches
-        if (user != null && passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            return ResponseEntity.ok("Login successful");
-        }
-
-        // If credentials are invalid, return a 401 Unauthorized response
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        return userService.authenticateUser(usernameOrEmail, password);
     }
-
 }
