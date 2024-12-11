@@ -6,25 +6,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    // Register user
+    // Constructor-based dependency injection
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    // Register user endpoint
     @PostMapping("/register")
     public User register(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
-    // Login user
+    // Login user endpoint
     @PostMapping("/login")
-    public User login(@RequestBody User loginRequest) {
-        String usernameOrEmail = loginRequest.getEmail(); // Assuming `email` field is used for usernameOrEmail
-        String password = loginRequest.getPassword();
-
-        return userService.authenticateUser(usernameOrEmail, password);
+    public User login(@RequestBody User user) {
+        return userService.authenticateUser(user.getEmail(), user.getPassword());
     }
 }
