@@ -2,9 +2,9 @@ package com.syllabusoptimizer.controller;
 
 import com.syllabusoptimizer.model.User;
 import com.syllabusoptimizer.service.UserService;
+import com.syllabusoptimizer.model.LoginRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,25 +14,28 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    // Register a new user
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    // Register endpoint
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        try {
-            userService.register(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User registration failed");
-        }
+    public String register(@RequestParam String username, @RequestParam String email, @RequestParam String password) {
+        User user = userService.registerUser(username, email, password);
+        return "User registered successfully: " + user.getUsername();
     }
 
-    // Login the user
+    // Login endpoint
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        boolean isAuthenticated = userService.login(user);
-        if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+    public String login(@RequestBody LoginRequest loginRequest) {
+        // Find the user by username
+        User user = userService.getUserByUsername(loginRequest.getUsername());
+
+        // Check if user exists and validate the password
+        if (user != null && passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            return "Login successful!";
         }
+
+        // If invalid credentials, throw an exception
+        throw new RuntimeException("Invalid credentials");
     }
 }
