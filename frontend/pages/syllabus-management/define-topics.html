@@ -3,123 +3,82 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Define Topic</title>
+    <title>Define Topics</title>
     <link rel="stylesheet" href="../../css/style.css" />
+    <script defer src="../../js/define-topics.js"></script>
   </head>
   <body class="define-topic-page">
-    <div class="container">
-      <header class="page-header">
-        <h1>Define Topic</h1>
-      </header>
+    <header>
+      <h1>Define Topics</h1>
+    </header>
 
-      <form id="define-topic-form" class="form-container">
-        <!-- Create New Course -->
-        <div class="form-group">
-          <label for="new-course-name">Create New Course</label>
-          <div class="create-course">
-            <input
-              type="text"
-              id="new-course-name"
-              class="form-control"
-              placeholder="Enter course name"
-            />
-            <button
-              id="create-course-btn"
-              type="button"
-              class="btn btn-secondary"
-            >
-              Add Course
-            </button>
-          </div>
-        </div>
-
-        <!-- Course Selection -->
-        <div class="form-group">
-          <label for="course-select">Select Course</label>
-          <select id="course-select" class="form-control" required>
-            <option value="" disabled selected>Select a course</option>
-            <!-- Dynamically populated options -->
+    <main>
+      <form id="define-topic-form">
+        
+        <section>
           </select>
-        </div>
+          <input
+            type="text"
+            id="new-course-name"
+            placeholder="Enter new course name"
+          />
+          <button type="button" id="create-course-btn">Add Course</button>
+          <!-- Course Selection -->
+          <label for="course-select">Select Course:</label>
+          
+          <select id="course-select" required><option value="">-- Select a Course --</option></select>
+        </section>
 
         <!-- Subject Name -->
-        <div class="form-group">
-          <label for="subject-name">Subject Name</label>
+        <section>
+          <label for="subject-name">Subject Name:</label>
           <input
             type="text"
             id="subject-name"
-            class="form-control"
             placeholder="Enter subject name"
             required
           />
-        </div>
+        </section>
 
-        <!-- Estimated Lectures -->
-        <div class="form-group">
-          <label for="estimated-lectures">Estimated Lectures</label>
+        <!-- Estimated Hours -->
+        <section>
+          <label for="estimated-lectures">Estimated Lectures:</label>
           <input
             type="number"
             id="estimated-lectures"
-            class="form-control"
-            placeholder="Enter estimated lectures"
-            min="1"
+            placeholder="Enter number of lectures"
             required
           />
-        </div>
+        </section>
 
         <!-- Chapter Sequence -->
-        <div class="form-group">
-          <label for="chapter-sequence">Chapter Sequence</label>
+        <section>
+          <label for="chapter-sequence">Chapter Sequence:</label>
           <input
             type="number"
             id="chapter-sequence"
-            class="form-control"
             placeholder="Enter chapter sequence"
-            min="1"
             required
           />
-        </div>
+        </section>
 
         <!-- Modules -->
-        <div class="form-group">
-          <label>Modules</label>
-          <div id="module-container">
-            <div class="modules">
-              <input
-                type="text"
-                class="module-name form-control"
-                placeholder="Enter module name"
-                required
-              />
-              <button type="button" class="btn btn-danger remove-module-btn">
-                Remove
-              </button>
-            </div>
-          </div>
-          <button id="add-module-btn" type="button" class="btn btn-secondary">
-            Add Module
-          </button>
-        </div>
+        <section id="module-container">
+          <h3>Modules:</h3>
+          <button type="button" id="add-module-btn">Add Module</button>
+        </section>
 
         <!-- Deadline Date -->
-        <div class="form-group">
-          <label for="deadline-date">Deadline Date</label>
-          <input type="date" id="deadline-date" class="form-control" required />
-          <small
-            >Note: Weekends and holidays will be automatically adjusted.</small
-          >
-        </div>
+        <section>
+          <label for="deadline-date">Deadline:</label>
+          <input type="date" id="deadline-date" required />
+        </section>
 
-        <!-- Save Topic -->
-        <div class="form-group form-actions">
-          <button id="save-module-btn" type="submit" class="btn btn-primary">
-            Save Topic
-          </button>
-        </div>
+        <!-- Submit Button -->
+        <section>
+          <button type="submit">Save Topic</button>
+        </section>
       </form>
-    </div>
-
-    <!-- Link to JavaScript -->
-    <script src="../../js/define-topics.js"></script>
+    </main>
   </body>
 </html>

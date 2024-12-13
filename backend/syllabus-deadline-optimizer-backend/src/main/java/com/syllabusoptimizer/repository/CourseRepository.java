@@ -1,3 +1,4 @@
+// src/main/java/com/syllabusoptimizer/repository/CourseRepository.java
 package com.syllabusoptimizer.repository;
 
 import com.syllabusoptimizer.model.Course;
@@ -6,5 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
-    // Custom queries can be added here if needed.
 }

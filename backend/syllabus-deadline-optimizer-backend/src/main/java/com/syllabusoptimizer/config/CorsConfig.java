@@ -16,7 +16,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://127.0.0.1:5500")); // Frontend origin
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+        config.addAllowedHeader("*");
         config.setAllowCredentials(true); // Allow cookies if necessary
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

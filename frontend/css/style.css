@@ -645,114 +645,108 @@ body.syllabus-management-page footer {
 }
 
 /* Define Topic Page Styles */
+/* Styles specifically for the Define Topics page */
 body.define-topic-page {
   font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
   margin: 0;
   padding: 0;
+  background-color: #fff; /* Matches user preference */
+  color: #0073e6;
 }
 
-body.define-topic-page .container {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-body.define-topic-page .page-header h1 {
+body.define-topic-page header {
+  background-color: #0073e6;
+  color: #fff;
   text-align: center;
-  color: #343a40;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+body.define-topic-page h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+body.define-topic-page main {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+body.define-topic-page form {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border: 1px solid #a78295;
+}
+
+body.define-topic-page form section {
   margin-bottom: 20px;
 }
 
-body.define-topic-page .form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-body.define-topic-page .form-group {
-  margin-bottom: 20px;
-}
-
-body.define-topic-page .form-group label {
+body.define-topic-page form label {
   display: block;
   font-weight: bold;
-  margin-bottom: 8px;
-  color: #495057;
+  margin-bottom: 5px;
 }
 
-body.define-topic-page .form-control {
+body.define-topic-page form input,
+body.define-topic-page form select,
+body.define-topic-page form button {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
+  margin-top: 5px;
+  border: 1px solid #a78295;
+  border-radius: 4px;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
-body.define-topic-page .btn {
-  display: inline-block;
-  padding: 8px 15px;
-  font-size: 1rem;
-  border-radius: 5px;
-  text-align: center;
-  cursor: pointer;
+body.define-topic-page form input:focus,
+body.define-topic-page form select:focus,
+body.define-topic-page form button:focus {
+  outline: none;
+  border-color: #0073e6;
+  box-shadow: 0 0 5px rgba(63, 46, 62, 0.5);
+}
+
+body.define-topic-page #add-module-btn,
+body.define-topic-page #create-course-btn {
+  width: auto;
+  background-color: #0073e6;
+  color: #efe1d1;
   border: none;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
 }
 
-body.define-topic-page .btn-primary {
-  background-color: #007bff;
-  color: white;
-}
-
-body.define-topic-page .btn-primary:hover {
+body.define-topic-page #add-module-btn:hover,
+body.define-topic-page #create-course-btn:hover {
   background-color: #0056b3;
 }
 
-body.define-topic-page .btn-secondary {
-  background-color: #6c757d;
-  color: white;
+body.define-topic-page #module-container {
+  border: 1px solid #a78295;
+  padding: 10px;
+  border-radius: 4px;
 }
 
-body.define-topic-page .btn-secondary:hover {
-  background-color: #5a6268;
+body.define-topic-page #module-container h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #0073e6;
 }
 
-body.define-topic-page .btn-danger {
-  background-color: #dc3545;
-  color: white;
+body.define-topic-page button[type="submit"] {
+  background-color: #0073e6;
+  color: #efe1d1;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
 }
 
-body.define-topic-page .btn-danger:hover {
-  background-color: #c82333;
-}
-
-body.define-topic-page #module-container .modules {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-body.define-topic-page #module-container .modules .form-control {
-  flex: 1;
-}
-
-body.define-topic-page .form-actions {
-  text-align: right;
-}
-
-body.define-topic-page .form-actions .btn {
-  margin-left: 10px;
-}
-
-body.define-topic-page small {
-  display: block;
-  margin-top: 5px;
-  color: #6c757d;
+body.define-topic-page button[type="submit"]:hover {
+  background-color: #0073e6;
 }
 
 /* Calendar Page Styles */

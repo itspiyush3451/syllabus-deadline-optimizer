@@ -9,21 +9,19 @@
 
   <body class="dashboard-page">
     <header>
-      <a href="/index.html" class="home"
+      <a href="../index.html" class="home"
         ><h1>Academic Syllabus Deadline Optimizer</h1></a
       >
       <nav class="navbar">
-        <a href="/pages/login.html" class="button">Login</a>
-        <a href="/pages/register.html" class="button">Register</a>
-        <a href="/pages/dashboard.html" class="button">Dashboard</a>
-        <a href="/pages/syllabus-management/index.html" class="button"
+        <a href="./dashboard.html" class="button">Dashboard</a>
+        <a href="./syllabus-management/index.html" class="button"
           >Syllabus Management</a
         >
       </nav>
     </header>
     <main class="dashboard-container">
       <section class="welcome-section">
-        <h2>Welcome, [Teacher's Name]</h2>
+        <h2>Welcome, <span id="usernameDisplay"></span>!</h2>
         <p>
           Manage your syllabus, track progress, and plan your schedule all in
           one place.
@@ -56,5 +54,6 @@
     <footer>
       <p>&copy; 2024 Syllabus Deadline Optimizer. All rights reserved.</p>
     </footer>
+    <script src="../js/dashboard.js"></script>
   </body>
 </html>
