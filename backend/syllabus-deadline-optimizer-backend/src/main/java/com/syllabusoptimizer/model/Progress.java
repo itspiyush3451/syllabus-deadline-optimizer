@@ -3,42 +3,36 @@ package com.syllabusoptimizer.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "progress_tracking") // Table name in the database
+@Table(name = "progress_tracking")
 public class Progress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long topicId; // Assuming you have a topic ID to track progress
-    private String userId; // Assuming you want to track progress per user
-    private int completedLectures; // Number of completed lectures
-    private int totalLectures; // Total number of lectures for the topic
-    private String status; // Status of the progress (e.g., "In Progress", "Completed")
+    @Column(name = "completed_lectures", nullable = false)
+    private int completedLectures;
+
+    @Column(name = "topic_lectures", nullable = false)
+    private int topicLectures;
+
+    @Column(name = "status", nullable = false)
+    private String status;
+
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    @Transient
+    private double completionPercentage; // Calculated field, not stored in DB
 
     // Getters and Setters
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getTopicId() {
-        return topicId;
-    }
-
-    public void setTopicId(Long topicId) {
-        this.topicId = topicId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public int getCompletedLectures() {
@@ -49,12 +43,12 @@ public class Progress {
         this.completedLectures = completedLectures;
     }
 
-    public int getTotalLectures() {
-        return totalLectures;
+    public int getTopicLectures() {
+        return topicLectures;
     }
 
-    public void setTotalLectures(int totalLectures) {
-        this.totalLectures = totalLectures;
+    public void setTopicLectures(int topicLectures) {
+        this.topicLectures = topicLectures;
     }
 
     public String getStatus() {
@@ -63,5 +57,21 @@ public class Progress {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public double getCompletionPercentage() {
+        return completionPercentage;
+    }
+
+    public void setCompletionPercentage(double completionPercentage) {
+        this.completionPercentage = completionPercentage;
     }
 }

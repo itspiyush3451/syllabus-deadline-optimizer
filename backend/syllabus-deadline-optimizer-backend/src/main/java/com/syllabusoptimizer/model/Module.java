@@ -1,4 +1,3 @@
-// src/main/java/com/syllabusoptimizer/model/Module.java
 package com.syllabusoptimizer.model;
 
 import jakarta.persistence.*;
@@ -6,15 +5,20 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "modules")
 public class Module {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "topic_id", nullable = false) // Foreign key for Topic
-    private Topic topic;
+//    @Column(nullable = false)
+    private String name; // Renamed field for consistency
 
-    private String name;
+//    @Column(nullable = false)
+    private Integer estimatedLectures; // Added field for lecture allocation
+
+    @ManyToOne
+//    @JoinColumn(name = "topic_id", nullable = false)
+    private Topic topic;
 
     // Getters and Setters
     public Long getId() {
@@ -25,19 +29,27 @@ public class Module {
         this.id = id;
     }
 
-    public Topic getTopic() {
-        return topic;
-    }
-
-    public void setTopic(Topic topic) {
-        this.topic = topic;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getEstimatedLectures() {
+        return estimatedLectures;
+    }
+
+    public void setEstimatedLectures(Integer estimatedLectures) {
+        this.estimatedLectures = estimatedLectures;
+    }
+
+    public Topic getTopic() {
+        return topic;
+    }
+
+    public void setTopic(Topic topic) {
+        this.topic = topic;
     }
 }

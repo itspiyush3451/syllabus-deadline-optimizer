@@ -1,4 +1,3 @@
-// src/main/java/com/syllabusoptimizer/repository/TopicRepository.java
 package com.syllabusoptimizer.repository;
 
 import com.syllabusoptimizer.model.Topic;
@@ -7,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long> {
-    // You can define custom query methods here if needed
+    // Additional query methods can be added here if needed
 }

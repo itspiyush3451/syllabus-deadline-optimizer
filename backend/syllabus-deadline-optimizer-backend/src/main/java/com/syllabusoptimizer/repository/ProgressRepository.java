@@ -4,7 +4,10 @@ import com.syllabusoptimizer.model.Progress;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ProgressRepository extends JpaRepository<Progress, Long> {
-    // You can add custom query methods here if needed
+    // Find progress records by user ID
+    List<Progress> findByUserId(Long userId);
 }

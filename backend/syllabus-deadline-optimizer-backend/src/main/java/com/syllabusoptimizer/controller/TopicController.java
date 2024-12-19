@@ -2,50 +2,72 @@ package com.syllabusoptimizer.controller;
 
 import com.syllabusoptimizer.model.Topic;
 import com.syllabusoptimizer.service.TopicService;
-import com.syllabusoptimizer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
-@CrossOrigin("http://127.0.0.1:5500")
 @RequestMapping("/api/topics")
+@CrossOrigin(origins = "http://127.0.0.1:5500") // Adjust the origin if needed
 public class TopicController {
-    private TopicService topicService;
+
     @Autowired
+    private final TopicService topicService;
+
     public TopicController(TopicService topicService) {
         this.topicService = topicService;
     }
 
     // Add a new topic
     @PostMapping("/addTopic")
-    public Topic addTopic(@RequestBody Topic topic) {
-        return topicService.saveTopic(topic);
+    public Topic addTopic(@RequestBody Map<String, Object> payload) {
+        Topic topic = parseTopicFromPayload(payload);
+        List<String> moduleNames = parseModuleNamesFromPayload(payload);
+        return topicService.saveTopic(topic, moduleNames);
     }
 
-    // Fetch all topics
-    @GetMapping("/allTopics")
+    // Get all topics
+    @GetMapping
     public List<Topic> getAllTopics() {
         return topicService.getAllTopics();
     }
 
-    // Fetch a topic by ID
+    // Get topic by ID
     @GetMapping("/{id}")
-    public Topic getTopicById(@PathVariable Long id) {
-        return topicService.getTopicById(id)
-                .orElseThrow(() -> new RuntimeException("Topic not found with id " + id));
+    public Optional<Topic> getTopicById(@PathVariable Long id) {
+        return topicService.getTopicById(id);
     }
 
     // Update a topic
     @PutMapping("/{id}")
-    public Topic updateTopic(@PathVariable Long id, @RequestBody Topic topicDetails) {
-        return topicService.updateTopic(id, topicDetails);
+    public Topic updateTopic(@PathVariable Long id, @RequestBody Map<String, Object> payload) {
+        Topic topicDetails = parseTopicFromPayload(payload);
+        List<String> moduleNames = parseModuleNamesFromPayload(payload);
+        return topicService.updateTopic(id, topicDetails, moduleNames);
     }
 
     // Delete a topic
     @DeleteMapping("/{id}")
     public void deleteTopic(@PathVariable Long id) {
         topicService.deleteTopic(id);
+    }
+
+    // Helper: Parse Topic from the payload
+    private Topic parseTopicFromPayload(Map<String, Object> payload) {
+        Topic topic = new Topic();
+        topic.setSubjectName((String) payload.get("subjectName"));
+        topic.setChapterSequence((Integer) payload.get("chapterSequence"));
+        topic.setEstimatedLectures((Integer) payload.get("estimatedLectures"));
+        topic.setDeadlineDate(LocalDate.parse((String) payload.get("deadlineDate"))); // Adjust date parsing if necessary
+        return topic;
+    }
+
+    // Helper: Parse module names from the payload
+    private List<String> parseModuleNamesFromPayload(Map<String, Object> payload) {
+        return (List<String>) payload.get("moduleNames");
     }
 }

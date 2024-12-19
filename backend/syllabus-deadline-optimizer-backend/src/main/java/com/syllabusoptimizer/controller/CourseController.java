@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -20,7 +20,6 @@ public class CourseController {
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
-
     // Add a new course
     @PostMapping("/getCourse")
     public ResponseEntity<Course> addCourse(@RequestBody Course course) {
@@ -28,7 +27,7 @@ public class CourseController {
         return ResponseEntity.ok(createdCourse);
     }
 
-    // Fetch all courses
+    // Get all courses
     @GetMapping("/getCourse/all")
     public ResponseEntity<List<Course>> getAllCourses() {
         List<Course> courses = courseService.getAllCourses();
@@ -56,7 +55,7 @@ public class CourseController {
     // Delete a course
     @DeleteMapping("/getCourse/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
-            boolean isDeleted = courseService.deleteCourse(id);
+        boolean isDeleted = courseService.deleteCourse(id);
         if (isDeleted) {
             return ResponseEntity.noContent().build();
         } else {

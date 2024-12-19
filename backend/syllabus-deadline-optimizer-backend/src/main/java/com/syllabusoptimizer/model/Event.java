@@ -1,10 +1,10 @@
 package com.syllabusoptimizer.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "calendar_events") // Custom table name
+@Table(name = "events")
 public class Event {
 
     @Id
@@ -12,9 +12,12 @@ public class Event {
     private Long id;
 
     private String title;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private String description;
+    private LocalDate startDate;
+    private LocalDate endDate;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 
     // Getters and Setters
     public Long getId() {
@@ -33,27 +36,27 @@ public class Event {
         this.title = title;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
-    public String getDescription() {
-        return description;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
-
     // Constructor-based dependency injection
     @Autowired
     public UserController(UserService userService) {
