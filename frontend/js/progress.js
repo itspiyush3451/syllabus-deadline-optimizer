@@ -1,108 +1,98 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const progressTable = document
-    .getElementById("progress-table")
-    .getElementsByTagName("tbody")[0];
+  const progressTableBody = document.querySelector("#progress-table tbody");
 
-  // Function to render the progress table
-  function renderProgressTable(progressData) {
-    progressTable.innerHTML = "";
+  // Fetch topics from localStorage
+  const topics = JSON.parse(localStorage.getItem("topics")) || [];
 
-    progressData.forEach((entry, index) => {
+  // Populate progress table
+  function loadProgressTable() {
+    progressTableBody.innerHTML = ""; // Clear existing rows
+
+    topics.forEach((topic, index) => {
       const row = document.createElement("tr");
 
-      row.innerHTML = `
-        <td>${entry.course}</td>
-        <td>${entry.topic}</td>
-        <td>${entry.status}</td>
-        <td>${entry.completion}%</td>
-        <td>
-          <button class="edit-button" onclick="editProgress(${entry.id})">Edit</button>
-          <button class="delete-button" onclick="deleteProgress(${entry.id})">Delete</button>
-        </td>
-      `;
+      // Add course name
+      const courseCell = document.createElement("td");
+      courseCell.textContent = topic.course;
+      row.appendChild(courseCell);
 
-      progressTable.appendChild(row);
-    });
-  }
+      // Add subject name
+      const subjectCell = document.createElement("td");
+      subjectCell.textContent = topic.subject;
+      row.appendChild(subjectCell);
 
-  // Fetch and render progress data
-  function fetchProgress() {
-    fetch("/api/progress")
-      .then((response) => response.json())
-      .then((progressData) => {
-        renderProgressTable(progressData);
-      })
-      .catch((error) => console.error("Error fetching progress data:", error));
-  }
+      // Add completed lectures
+      const lecturesCell = document.createElement("td");
+      lecturesCell.textContent = `${topic.completedLectures}/${topic.totalLectures}`;
+      row.appendChild(lecturesCell);
 
-  // Function to edit progress of a topic
-  window.editProgress = function (id) {
-    fetch(`/api/progress/${id}`)
-      .then((response) => response.json())
-      .then((entry) => {
-        const newStatus = prompt("Enter new status:", entry.status);
-        const newCompletion = prompt(
-          "Enter new completion percentage:",
-          entry.completion
+      // Add percentage
+      const percentageCell = document.createElement("td");
+      const percentage = (
+        (topic.completedLectures / topic.totalLectures) *
+        100
+      ).toFixed(1);
+      percentageCell.textContent = `${percentage}%`;
+      row.appendChild(percentageCell);
+
+      // Add actions
+      const actionsCell = document.createElement("td");
+
+      // Update button
+      const updateBtn = document.createElement("button");
+      updateBtn.textContent = "Update";
+      updateBtn.addEventListener("click", () => {
+        const newCompleted = prompt(
+          `Enter completed lectures for ${topic.subject}:`,
+          topic.completedLectures
         );
-
-        if (newStatus && newCompletion) {
-          const updatedEntry = {
-            ...entry,
-            status: newStatus,
-            completion: parseInt(newCompletion, 10),
-          };
-
-          fetch(`/api/progress/${id}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updatedEntry),
-          })
-            .then(() => {
-              fetchProgress(); // Refresh progress table
-            })
-            .catch((error) => console.error("Error updating progress:", error));
+        if (
+          newCompleted !== null &&
+          !isNaN(newCompleted) &&
+          newCompleted <= topic.totalLectures
+        ) {
+          topic.completedLectures = parseInt(newCompleted, 10);
+          saveProgress();
+          loadProgressTable();
+        } else {
+          alert("Invalid input. Please enter a valid number.");
         }
-      })
-      .catch((error) => console.error("Error fetching progress entry:", error));
-  };
+      });
+      actionsCell.appendChild(updateBtn);
 
-  // Function to delete a progress entry
-  window.deleteProgress = function (id) {
-    fetch(`/api/progress/${id}`, {
-      method: "DELETE",
-    })
-      .then(() => {
-        fetchProgress(); // Refresh progress table
-      })
-      .catch((error) => console.error("Error deleting progress entry:", error));
-  };
+      // Mark Complete button
+      const markCompleteBtn = document.createElement("button");
+      markCompleteBtn.textContent = "Mark Complete";
+      markCompleteBtn.addEventListener("click", () => {
+        topic.completedLectures = topic.totalLectures; // Mark all lectures as completed
+        saveProgress();
+        loadProgressTable();
+      });
+      actionsCell.appendChild(markCompleteBtn);
 
-  // Example of adding a new progress entry
-  document
-    .getElementById("add-progress-btn")
-    ?.addEventListener("click", function () {
-      const newEntry = {
-        course: "Sample Course",
-        topic: "Sample Topic",
-        status: "In Progress",
-        completion: 50,
-      };
+      // Delete button
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.addEventListener("click", () => {
+        if (confirm(`Are you sure you want to delete "${topic.subject}"?`)) {
+          topics.splice(index, 1); // Remove topic from the array
+          saveProgress();
+          loadProgressTable();
+        }
+      });
+      actionsCell.appendChild(deleteBtn);
 
-      fetch("/api/progress", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newEntry),
-      })
-        .then(() => {
-          fetchProgress(); // Refresh progress table
-        })
-        .catch((error) => console.error("Error adding progress:", error));
+      row.appendChild(actionsCell);
+
+      progressTableBody.appendChild(row);
     });
+  }
 
-  fetchProgress();
+  // Save progress back to localStorage
+  function saveProgress() {
+    localStorage.setItem("topics", JSON.stringify(topics));
+  }
+
+  // Initial load
+  loadProgressTable();
 });

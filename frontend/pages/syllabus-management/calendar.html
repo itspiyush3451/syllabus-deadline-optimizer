@@ -4,75 +4,87 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calendar | Syllabus Deadline Optimizer</title>
-    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="/frontend/css/style.css" />
     <script defer src="../../js/calendar.js"></script>
   </head>
   <body class="calendar-page">
-    <div class="container">
+    <header>
       <h1>Course Calendar</h1>
-      <table id="calendar-table" class="calendar-table">
-        <!-- Table content will be populated by JS -->
-      </table>
+      <nav class="navbar">
+        <a href="../syllabus-management/define-topics.html" class="button"
+          >Define Topics</a
+        >
+        <a href="../syllabus-management/progress.html" class="button"
+          >Progress</a
+        >
+        <a href="../dashboard.html" class="button">Dashboard</a>
+      </nav>
+    </header>
 
-      <h2>Add/Update Subject</h2>
-      <form id="add-subject-form">
-        <input type="hidden" id="original-subject-name" />
-        <input type="hidden" id="action" value="add" />
+    <main>
+      <!-- Calendar Table -->
+      <section class="calendar-container">
+        <h2>Scheduled Topics</h2>
+        <table id="calendar-table" class="calendar-table">
+          <!-- Table content populated by JS -->
+        </table>
+      </section>
 
-        <!-- Course Selection -->
-        <label for="course">Course:</label>
-        <input type="text" id="course" class="form-control" required />
+      <!-- Add/Update Subject Form -->
+      <section class="form-container">
+        <h2>Add/Update Subject</h2>
+        <form id="add-subject-form" class="form">
+          <input type="hidden" id="original-subject-name" />
+          <input type="hidden" id="action" value="add" />
 
-        <!-- Topic Name -->
-        <label for="subject-name">Subject Name:</label>
-        <input type="text" id="subject-name" class="form-control" required />
+          <label for="course">Course:</label>
+          <input type="text" id="course" class="form-control" required />
 
-        <!-- Estimated Lectures -->
-        <label for="estimated-lectures">Estimated Lectures:</label>
-        <input
-          type="number"
-          id="estimated-lectures"
-          class="form-control"
-          min="1"
-          required
-        />
+          <label for="subject-name">Subject Name:</label>
+          <input type="text" id="subject-name" class="form-control" required />
 
-        <!-- Topic Sequence -->
-        <label for="chapter-sequence">Chapter Sequence:</label>
-        <input
-          type="number"
-          id="chapter-sequence"
-          class="form-control"
-          min="1"
-          required
-        />
+          <label for="estimated-lectures">Estimated Lectures:</label>
+          <input
+            type="number"
+            id="estimated-lectures"
+            class="form-control"
+            min="1"
+            required
+          />
 
-        <!-- Subtopics -->
-        <label for="modules">Modules (comma-separated):</label>
-        <input
-          type="text"
-          id="modules"
-          class="form-control"
-          placeholder="Enter modules separated by commas"
-          required
-        />
+          <label for="chapter-sequence">Chapter Sequence:</label>
+          <input
+            type="number"
+            id="chapter-sequence"
+            class="form-control"
+            min="1"
+            required
+          />
 
-        <!-- Deadline -->
-        <label for="deadline-date">Deadline:</label>
-        <input type="date" id="deadline-date" class="form-control" required />
+          <label for="modules">Modules (comma-separated):</label>
+          <input
+            type="text"
+            id="modules"
+            class="form-control"
+            placeholder="Enter modules separated by commas"
+            required
+          />
 
-        <!-- Status -->
-        <label for="status">Status:</label>
-        <select id="status" class="form-control" required>
-          <option value="Not Started">Not Started</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
-        </select>
+          <label for="deadline-date">Deadline:</label>
+          <input type="date" id="deadline-date" class="form-control" required />
 
-        <button type="submit" class="btn btn-primary">
-          Save/Update Module
-        </button>
-      </form>
-    </div>
+          <label for="status">Status:</label>
+          <select id="status" class="form-control" required>
+            <option value="Not Started">Not Started</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+
+          <button type="submit" class="btn btn-primary">
+            Save/Update Module
+          </button>
+        </form>
+      </section>
+    </main>
   </body>
 </html>

@@ -838,3 +838,80 @@ body.calendar-page .btn-primary {
 body.calendar-page .btn-primary:hover {
   background-color: #0056b3;
 }
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #efe1d1; /* Light beige background */
+}
+
+header {
+  background-color: #0073e6; /* Blue header */
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+}
+
+main {
+  padding: 20px;
+}
+
+/* Progress Container */
+.progress-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Table Styles */
+.progress-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.progress-table th,
+.progress-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.progress-table th {
+  background-color: #0073e6; /* Blue header for table */
+  color: white;
+}
+
+.progress-table tr:nth-child(even) {
+  background-color: #f2f2f2; /* Light gray for even rows */
+}
+
+.progress-table tr:hover {
+  background-color: #d1e7ff; /* Light blue on hover */
+}
+
+/* Button Styles */
+button {
+  background-color: #0073e6; /* Blue buttons */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #005bb5; /* Darker blue on hover */
+}
+
+button:focus {
+  outline: none;
+}

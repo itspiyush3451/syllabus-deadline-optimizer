@@ -1,43 +1,36 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const createCourseBtn = document.getElementById("create-course-btn");
-  const courseSelect = document.getElementById("course-select");
-  const addModuleBtn = document.getElementById("add-module-btn");
-  const moduleContainer = document.getElementById("module-container");
+document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("define-topic-form");
+  const courseSelect = document.getElementById("course-select");
+  const moduleContainer = document.getElementById("module-container");
+  const addModuleButton = document.getElementById("add-module-btn");
+  const storedCourses = JSON.parse(localStorage.getItem("courses")) || [];
 
-  // Add course functionality
-  createCourseBtn.addEventListener("click", function () {
-    const newCourseName = document
-      .getElementById("new-course-name")
-      .value.trim();
+  // Populate course dropdown with stored courses
+  storedCourses.forEach((course) => {
+    const option = document.createElement("option");
+    option.value = course;
+    option.textContent = course;
+    courseSelect.appendChild(option);
+  });
 
-    if (!newCourseName) {
-      alert("Please enter a course name.");
-      return;
+  // Add new course to dropdown and localStorage
+  document.getElementById("create-course-btn").addEventListener("click", () => {
+    const newCourse = document.getElementById("new-course-name").value.trim();
+    if (newCourse && !storedCourses.includes(newCourse)) {
+      storedCourses.push(newCourse);
+      localStorage.setItem("courses", JSON.stringify(storedCourses));
+      const option = document.createElement("option");
+      option.value = newCourse;
+      option.textContent = newCourse;
+      courseSelect.appendChild(option);
+      document.getElementById("new-course-name").value = "";
+    } else {
+      alert("Course already exists or is invalid.");
     }
-
-    // Fetch request to add the course
-    fetch("http://localhost:8081/api/courses/getCourse", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name: newCourseName }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const option = document.createElement("option");
-        option.value = data.id;
-        option.textContent = data.name;
-        courseSelect.appendChild(option);
-        document.getElementById("new-course-name").value = "";
-        alert("Course added successfully!");
-      })
-      .catch((error) => console.error("Error:", error));
   });
 
   // Add module functionality
-  addModuleBtn.addEventListener("click", function () {
+  addModuleButton.addEventListener("click", () => {
     const moduleDiv = document.createElement("div");
     moduleDiv.classList.add("module-item");
 
@@ -51,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
     removeBtn.type = "button";
     removeBtn.classList.add("remove-module-btn");
     removeBtn.textContent = "Remove";
-    removeBtn.addEventListener("click", function () {
+    removeBtn.addEventListener("click", () => {
       moduleDiv.remove();
     });
     moduleDiv.appendChild(removeBtn);
@@ -59,54 +52,51 @@ document.addEventListener("DOMContentLoaded", function () {
     moduleContainer.appendChild(moduleDiv);
   });
 
-  // Form submission
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+  // Save topic data
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-    // Validate fields
-    const modules = Array.from(document.querySelectorAll(".module-name"))
+    const selectedCourse = courseSelect.value;
+    const subjectName = document.getElementById("subject-name").value.trim();
+    const estimatedLectures = parseInt(
+      document.getElementById("estimated-lectures").value,
+      10
+    );
+    const deadlineDate = document.getElementById("deadline-date").value;
+
+    const moduleInputs = document.querySelectorAll(".module-name");
+    const modules = Array.from(moduleInputs)
       .map((input) => input.value.trim())
-      .filter(Boolean);
+      .filter((name) => name);
 
-    if (!modules.length) {
+    if (
+      !selectedCourse ||
+      !subjectName ||
+      !estimatedLectures ||
+      !deadlineDate
+    ) {
+      alert("Please fill out all required fields.");
+      return;
+    }
+
+    if (modules.length === 0) {
       alert("Please add at least one module.");
       return;
     }
 
-    const data = {
-      courseId: courseSelect.value,
-      subjectName: document.getElementById("subject-name").value.trim(),
-      estimatedLectures: parseInt(
-        document.getElementById("estimated-lectures").value,
-        10
-      ),
-      chapterSequence: parseInt(
-        document.getElementById("chapter-sequence").value,
-        10
-      ),
-      deadlineDate: document.getElementById("deadline-date").value,
-      modules: modules, // Include the modules array,
-    };
+    const topics = JSON.parse(localStorage.getItem("topics")) || [];
+    topics.push({
+      course: selectedCourse,
+      subject: subjectName,
+      totalLectures: estimatedLectures,
+      completedLectures: 0, // Default completed lectures is 0
+      deadline: deadlineDate,
+      modules,
+    });
+    localStorage.setItem("topics", JSON.stringify(topics));
 
-    fetch("http://localhost:8081/api/topics/addTopic", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Error : ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((responseData) => {
-        alert(
-          `Topic saved successfully! ID: ${responseData.id}, Name: ${responseData.name}`
-        );
-        form.reset(); // Reset the form
-      })
-      .catch((error) => console.error("Error:", error));
+    alert("Topic saved successfully!");
+    form.reset();
+    moduleContainer.innerHTML = ""; // Clear modules
   });
 });
