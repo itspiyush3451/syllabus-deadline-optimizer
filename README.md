@@ -21,34 +21,6 @@ The **Syllabus Deadline Optimizer** is a web-based application designed to help 
   - **VS Code** for frontend development.
   - **IntelliJ IDEA** for backend development.
 
-## Project Structure
-/syllabus-deadline-optimizer │ ├── frontend/
-│ ├── css/
-│ │ └── style.css
-│ │ │ ├── js/
-│ │ ├── app.js
-│ │ ├── validation.js
-│ │ ├── dashboard.js
-│ │ ├── define-topics.js
-│ │ ├── progress.js
-│ │ └── calendar.js
-│ │ │ ├── pages/
-│ │ ├── dashboard.html
-│ │ ├── register.html
-│ │ ├── login.html
-│ │ └── syllabus-management/
-│ │ ├── index.html
-│ │ ├── define-topics.html
-│ │ ├── progress.html
-│ │ └── calendar.html
-│ │ │ ├── img/
-│ │ └── (Currently empty)
-│ │ │ └── index.html
-│ ├── backend/ │ ├── controller/
-│ ├── model/
-│ ├── repository/
-│ └── service/
-│ └── database/ └── (Database schema and migrations)
 
 
 ## Setup Instructions
