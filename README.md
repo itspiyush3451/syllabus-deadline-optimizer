@@ -91,6 +91,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-For any questions or feedback, you can reach out to [piyushyadav7666@gmail.com].
+For any questions or feedback, you can reach out to piyushyadav7666@gmail.com.
 
 
