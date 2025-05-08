@@ -1,99 +1,162 @@
 # Syllabus Deadline Optimizer
 
+![GitHub](https://img.shields.io/github/license/itspiyush3451/syllabus-deadline-optimizer)
+![GitHub last commit](https://img.shields.io/github/last-commit/itspiyush3451/syllabus-deadline-optimizer)
+![GitHub issues](https://img.shields.io/github/issues/itspiyush3451/syllabus-deadline-optimizer)
+
 The **Syllabus Deadline Optimizer** is a web-based application designed to help professors manage their course syllabi, ensuring that the syllabus is completed on time before semester deadlines. It provides a dynamic platform for defining course topics, scheduling lectures, and tracking progress. This tool aims to streamline the syllabus management process, reduce the chances of missed deadlines, and provide an efficient way for professors to stay on top of their academic planning.
 
 
 
+##  Features
 
-## Features
-
+### Core Features
 - **Course Topic Management**: Define and sequence course topics based on the syllabus.
 - **Lecture Allocation**: Allocate estimated lecture hours for each topic, with backend logic to automatically divide the time among subtopics.
 - **Dynamic Scheduling**: Schedule lectures dynamically based on deadlines and adjust according to progress.
 - **Progress Tracking**: Track the completion of topics and manage the overall syllabus progress.
 - **User Authentication**: Users can register, log in, and manage their profiles.
 
-## Technologies Used
+### Advanced Features
+- **Real-time Updates**: WebSocket integration for instant progress updates
+- **AI-powered Optimization**: Smart deadline scheduling and resource allocation
+- **Interactive Dashboard**: Visual representation of course progress and deadlines
+- **Role-based Access Control**: Different permissions for professors and students
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-- **Frontend**: HTML, CSS, JavaScript
-  - JS frameworks: Vanilla JS for frontend logic.
-- **Backend**: Java, Spring Boot
-  - Spring Data JPA for database interaction.
-  - PostgreSQL as the database.
-- **Other Tools**:
-  - **VS Code** for frontend development.
-  - **IntelliJ IDEA** for backend development.
+## 🛠️ Technologies Used
 
+### Frontend
+- **HTML5, CSS3, JavaScript**
+  - Vanilla JS for frontend logic
+  - Responsive design principles
+  - Modern UI/UX practices
+  - WebSocket for real-time updates
 
+### Backend
+- **Java, Spring Boot**
+  - Spring Data JPA for database interaction
+  - Spring Security for authentication
+  - JWT for secure token management
+  - WebSocket for real-time communication
 
-## Setup Instructions
+### Database
+- **MySQL**
+  - Optimized database schema
+  - Efficient query performance
+  - Data persistence and integrity
+
+### Development Tools
+- **VS Code** for frontend development
+- **IntelliJ IDEA** for backend development
+- **Git** for version control
+- **Maven** for dependency management
+
+##  Setup Instructions
 
 ### Prerequisites
 
 - Java 17 or later
 - Spring Boot 3.x
-- PostgreSQL
-- Maven or Gradle for build automation
-- Node.js and npm (for frontend development)
+- MySQL 8.0 or later
+- Maven 3.6 or later
+- Modern web browser (Chrome, Firefox, Safari, Edge)
 
 ### Backend Setup
 
 1. Clone the repository:
+   ```bash
+   git clone https://github.com/itspiyush3451/syllabus-deadline-optimizer.git
+   cd syllabus-deadline-optimizer/backend
+   ```
 
-    ```bash
-    git clone https://github.com/itspiyush3451/syllabus-deadline-optimizer.git
-    cd syllabus-deadline-optimizer/backend
-    ```
-
-2. Create a PostgreSQL database and configure your `application.properties` in the `src/main/resources` directory with your database credentials:
-
-    ```properties
-    spring.datasource.url=jdbc:postgresql://localhost:5432/your_db_name
-    spring.datasource.username=your_db_username
-    spring.datasource.password=your_db_password
-    ```
+2. Configure database in `application.properties`:
+   ```properties
+   spring.datasource.url=jdbc:mysql://localhost:3306/syllabus_optimizer
+   spring.datasource.username=root
+   spring.datasource.password=root
+   ```
 
 3. Run the Spring Boot application:
-
-    ```bash
-    ./mvnw spring-boot:run
-    ```
+   ```bash
+   ./mvnw spring-boot:run
+   ```
 
 ### Frontend Setup
 
-1. Navigate to the `frontend` directory:
+1. Navigate to the frontend directory:
+   ```bash
+   cd ../frontend
+   ```
 
-    ```bash
-    cd ../frontend
-    ```
+2. Open `index.html` in your browser or use a local server:
+   ```bash
+   python -m http.server 5500
+   ```
 
-2. Open `index.html` in your browser to view the application.
+3. Access the application at `http://localhost:5500`
 
-### Database Setup
+##  Project Structure
 
-- The backend uses **Spring Data JPA** for automatic database table creation. Ensure your PostgreSQL database is running and configured properly.
+```
+syllabus-deadline-optimizer/
+├── backend/
+│   └── syllabus-deadline-optimizer-backend/
+│       ├── src/
+│       │   ├── main/
+│       │   │   ├── java/
+│       │   │   └── resources/
+│       │   └── test/
+│       └── pom.xml
+├── frontend/
+│   ├── css/
+│   ├── js/
+│   ├── img/
+│   ├── pages/
+│   └── index.html
+└── README.md
+```
 
-### Running the Application
+##  Security Features
 
-1. Start the backend (Spring Boot application).
-2. Open the frontend files (HTML pages) in a browser to interact with the application.
+- JWT-based authentication
+- Password encryption using BCrypt
+- CORS configuration
+- XSS protection
+- Input validation
+- Secure session management
 
-## Contribution
+##  Contributing
 
-If you'd like to contribute to the project, feel free to fork the repository, create a new branch, and submit a pull request. Please ensure your changes align with the project's goals and follow the existing code structure.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgements
+##  Acknowledgements
 
-- **Spring Boot** for providing a comprehensive backend framework.
-- **PostgreSQL** for being the reliable database solution.
-- **Vanilla JS** for simple frontend development.
+- **Spring Boot** for providing a comprehensive backend framework
+- **MySQL** for being the reliable database solution
+- **Vanilla JS** for simple frontend development
+- All contributors who have helped shape this project
 
-## Contact
+##  Contact
 
-For any questions or feedback, you can reach out to piyushyadav7666@gmail.com.
+Piyush Yadav - [piyus3451@gmail.com](mailto:piyus3451@gmail.com)
 
+Project Link: [https://github.com/itspiyush3451/syllabus-deadline-optimizer](https://github.com/itspiyush3451/syllabus-deadline-optimizer)
 
+##  Future Enhancements
+
+- Mobile application development
+- Integration with learning management systems
+- Advanced analytics and reporting
+- AI-powered study recommendations
+- Calendar integration with popular platforms
+- Multi-language support
+- Offline mode support
