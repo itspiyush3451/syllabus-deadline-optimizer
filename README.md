@@ -3,7 +3,6 @@
 The **Syllabus Deadline Optimizer** is a web-based application designed to help professors manage their course syllabi, ensuring that the syllabus is completed on time before semester deadlines. It provides a dynamic platform for defining course topics, scheduling lectures, and tracking progress. This tool aims to streamline the syllabus management process, reduce the chances of missed deadlines, and provide an efficient way for professors to stay on top of their academic planning.
 
 
-![Alt text](DashBoard.jpeg)
 
 
 ## Features
