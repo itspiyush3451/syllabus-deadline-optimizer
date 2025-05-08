@@ -3,44 +3,144 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title>Login - Syllabus Deadline Optimizer</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <style>
+      .login-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+
+      .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #2196F3;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .submit-btn:hover {
+        background-color: #1976D2;
+      }
+
+      .register-link {
+        text-align: center;
+        margin-top: 15px;
+      }
+
+      .register-link a {
+        color: #2196F3;
+        text-decoration: none;
+      }
+
+      .register-link a:hover {
+        text-decoration: underline;
+      }
+    </style>
   </head>
-  <body class="login-page">
+  <body>
     <header>
-      <a href="../index.html" class="home"
-        ><h1>Academic Syllabus Deadline Optimizer</h1></a
-      >
+      <img src="../img/graduate.png" alt="Company Logo" class="logo">
+      <a href="../index.html" class="home">
+        <h1>Academic Syllabus Deadline Optimizer</h1>
+      </a>
       <nav class="navbar">
-        <a href="../pages/register.html" class="button">Register</a>
+        <a href="./login.html" class="button">Login</a>
+        <a href="./register.html" class="button">Register</a>
       </nav>
     </header>
-    <div class="form-container">
-      <form id="loginForm">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          placeholder="Enter your username or email"
-          required
-        />
 
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Enter your password"
-          required
-        />
+    <main>
+      <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+            <div class="error-message" id="emailError"></div>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <div class="error-message" id="passwordError"></div>
+          </div>
+          <button type="submit" class="submit-btn">Login</button>
+        </form>
+        <div class="register-link">
+          Don't have an account? <a href="./register.html">Register here</a>
+        </div>
+      </div>
+    </main>
 
-        <button type="submit">Login</button>
-      </form>
-      <p class="form-footer">
-        Don't have an account? <a href="register.html">Register here</a>
-      </p>
-    </div>
-    <script src="../js/validation.js"></script>
+    <script>
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        try {
+          const response = await fetch('http://localhost:8081/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            // Store the token and user data
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            
+            // Redirect to dashboard
+            window.location.href = './dashboard.html';
+          } else {
+            // Show error message
+            document.getElementById('emailError').textContent = data.message || 'Invalid credentials';
+            document.getElementById('emailError').style.display = 'block';
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          document.getElementById('emailError').textContent = 'An error occurred. Please try again.';
+          document.getElementById('emailError').style.display = 'block';
+        }
+      });
+    </script>
   </body>
 </html>

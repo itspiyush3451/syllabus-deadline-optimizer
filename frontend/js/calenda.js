@@ -1,72 +1,100 @@
 document.addEventListener("DOMContentLoaded", () => {
   const calendarTable = document.getElementById("calendar-table");
   const addTopicForm = document.getElementById("add-subject-form");
+  const API_BASE_URL = "http://localhost:8081/api/calendar";
+  
+  // WebSocket connection
+  const socket = new SockJS('http://localhost:8081/ws');
+  const stompClient = Stomp.over(socket);
+  
+  // Connect to WebSocket
+  stompClient.connect({}, frame => {
+    console.log('Connected to WebSocket');
+    stompClient.subscribe('/topic/events', message => {
+      const data = JSON.parse(message.body);
+      if (typeof data === 'string') {
+        showNotification(data);
+      } else {
+        fetchTopics(); // Refresh the table when we get an update
+      }
+    });
+  });
+
+  // Notification system
+  function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
 
   // Fetch topics from the backend
   async function fetchTopics() {
     try {
-      const response = await fetch("http://localhost:8081/api/calendar");
+      const response = await fetch(API_BASE_URL);
       if (!response.ok) throw new Error(`Error: ${response.status}`);
       const data = await response.json();
       renderCalendar(data);
     } catch (error) {
       console.error("Failed to fetch topics:", error);
-      // alert("Unable to load topics. Please try again later.");
+      showNotification("Unable to load topics. Please try again later.");
     }
   }
 
   // Render calendar topics
   function renderCalendar(topics) {
     calendarTable.innerHTML = `
+      <thead>
         <tr>
-            <th>Course</th>
-            <th>Topic</th>
-            <th>Subtopics</th>
-            <th>Deadline</th>
-            <th>Actions</th>
+          <th>Course</th>
+          <th>Topic</th>
+          <th>Subtopics</th>
+          <th>Deadline</th>
+          <th>Status</th>
+          <th>Actions</th>
         </tr>
-      `;
-
-    topics.forEach((topic) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-          <td>${topic.course}</td>
-          <td>${topic.name}</td>
-          <td>${topic.subtopics}</td>
-          <td>${topic.deadline}</td>
-          <td>
+      </thead>
+      <tbody>
+        ${topics.map(topic => `
+          <tr>
+            <td>${topic.course}</td>
+            <td>${topic.name}</td>
+            <td>${topic.subtopics}</td>
+            <td>${topic.deadline}</td>
+            <td>${topic.status}</td>
+            <td>
               <button class="edit-button" data-id="${topic.id}">Edit</button>
               <button class="delete-button" data-id="${topic.id}">Delete</button>
-          </td>
-        `;
-      calendarTable.appendChild(row);
-    });
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    `;
 
     // Attach event listeners
-    document
-      .querySelectorAll(".edit-button")
-      .forEach((btn) =>
-        btn.addEventListener("click", () => editTopic(btn.dataset.id))
-      );
-    document
-      .querySelectorAll(".delete-button")
-      .forEach((btn) =>
-        btn.addEventListener("click", () => deleteTopic(btn.dataset.id))
-      );
+    document.querySelectorAll(".edit-button").forEach(btn => 
+      btn.addEventListener("click", () => editTopic(btn.dataset.id))
+    );
+    document.querySelectorAll(".delete-button").forEach(btn => 
+      btn.addEventListener("click", () => deleteTopic(btn.dataset.id))
+    );
   }
 
   // Edit topic
   async function editTopic(id) {
     try {
-      const response = await fetch(`http://localhost:8081/api/calendar/${id}`);
+      const response = await fetch(`${API_BASE_URL}/${id}`);
       if (!response.ok) throw new Error(`Error: ${response.status}`);
       const topic = await response.json();
 
       // Populate form fields
       document.getElementById("course").value = topic.course;
       document.getElementById("subject-name").value = topic.name;
-      document.getElementById("estimated-lectures").value =
-        topic.estimatedLectures;
+      document.getElementById("estimated-lectures").value = topic.estimatedLectures;
       document.getElementById("chapter-sequence").value = topic.sequence;
       document.getElementById("modules").value = topic.subtopics;
       document.getElementById("deadline-date").value = topic.deadline;
@@ -75,21 +103,40 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("original-subject-name").value = topic.name;
     } catch (error) {
       console.error("Failed to edit topic:", error);
-      alert("Unable to fetch topic details. Please try again.");
+      showNotification("Unable to fetch topic details. Please try again.");
     }
   }
 
   // Delete topic
   async function deleteTopic(id) {
+    if (!confirm("Are you sure you want to delete this topic?")) return;
+    
     try {
-      const response = await fetch(`http://localhost:8081/api/calendar/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error(`Error: ${response.status}`);
-      fetchTopics();
+      await fetchTopics();
+      showNotification("Topic deleted successfully!");
     } catch (error) {
       console.error("Failed to delete topic:", error);
-      alert("Unable to delete topic. Please try again.");
+      showNotification("Unable to delete topic. Please try again.");
+    }
+  }
+
+  // Optimize deadlines
+  async function optimizeDeadlines() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/optimize`, {
+        method: "POST",
+      });
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
+      const optimizedEvents = await response.json();
+      renderCalendar(optimizedEvents);
+      showNotification("Deadlines optimized successfully!");
+    } catch (error) {
+      console.error("Failed to optimize deadlines:", error);
+      showNotification("Unable to optimize deadlines. Please try again.");
     }
   }
 
@@ -100,33 +147,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // Validate inputs
     const course = document.getElementById("course").value.trim();
     const topicName = document.getElementById("subject-name").value.trim();
-    const estimatedLectures = parseInt(
-      document.getElementById("estimated-lectures").value,
-      10
-    );
-    const topicSequence = document
-      .getElementById("chapter-sequence")
-      .value.trim();
-    const subtopics = document
-      .getElementById("modules")
-      .value.split(",")
-      .map((item) => item.trim());
+    const estimatedLectures = parseInt(document.getElementById("estimated-lectures").value, 10);
+    const topicSequence = document.getElementById("chapter-sequence").value.trim();
+    const subtopics = document.getElementById("modules").value.split(",").map(item => item.trim());
     const deadline = document.getElementById("deadline-date").value.trim();
     const status = document.getElementById("status").value.trim();
     const action = document.getElementById("action").value;
-    const originalTopicName = document
-      .getElementById("original-subject-name")
-      .value.trim();
+    const originalTopicName = document.getElementById("original-subject-name").value.trim();
 
     if (!course || !topicName || !deadline || !subtopics.length) {
-      alert("Please fill in all required fields.");
+      showNotification("Please fill in all required fields.");
       return;
     }
 
-    const lectureSchedule = distributeLectures(
-      estimatedLectures,
-      subtopics.length
-    );
+    const lectureSchedule = distributeLectures(estimatedLectures, subtopics.length);
     const eventData = {
       course,
       name: topicName,
@@ -139,10 +173,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const endpoint =
-        action === "update"
-          ? `http://localhost:8081/api/calendar/${originalTopicName}`
-          : "/api/events";
+      const endpoint = action === "update" 
+        ? `${API_BASE_URL}/${originalTopicName}`
+        : API_BASE_URL;
       const method = action === "update" ? "PUT" : "POST";
 
       const response = await fetch(endpoint, {
@@ -154,11 +187,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (!response.ok) throw new Error(`Error: ${response.status}`);
+      
       addTopicForm.reset();
-      fetchTopics();
+      await fetchTopics();
+      showNotification(action === "update" ? "Topic updated successfully!" : "Topic added successfully!");
     } catch (error) {
       console.error("Failed to save topic:", error);
-      alert("Topic Saved Successffully!");
+      showNotification("Failed to save topic. Please try again.");
     }
   });
 
@@ -176,5 +211,51 @@ document.addEventListener("DOMContentLoaded", () => {
     return lectureDistribution;
   }
 
+  // Add optimize button to the page
+  const optimizeButton = document.createElement('button');
+  optimizeButton.textContent = 'Optimize Deadlines';
+  optimizeButton.className = 'optimize-button';
+  optimizeButton.onclick = optimizeDeadlines;
+  document.querySelector('main').appendChild(optimizeButton);
+
+  // Add some CSS for the new elements
+  const style = document.createElement('style');
+  style.textContent = `
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      z-index: 1000;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
+    .optimize-button {
+      background-color: #2196F3;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 20px;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .optimize-button:hover {
+      background-color: #1976D2;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Initial load
   fetchTopics();
 });

@@ -3,11 +3,77 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register</title>
+    <title>Register - Syllabus Deadline Optimizer</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <style>
+      .register-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+
+      .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #2196F3;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .submit-btn:hover {
+        background-color: #1976D2;
+      }
+
+      .login-link {
+        text-align: center;
+        margin-top: 15px;
+      }
+
+      .login-link a {
+        color: #2196F3;
+        text-decoration: none;
+      }
+
+      .login-link a:hover {
+        text-decoration: underline;
+      }
+    </style>
   </head>
   <body class="register-page">
     <header>
+      <img src="../img/graduate.png" alt="Company Logo" class="logo">
       <a href="../index.html" class="home"
         ><h1>Academic Syllabus Deadline Optimizer</h1></a
       >
@@ -16,60 +82,110 @@
         <a href="./login.html" class="button">Login</a>
       </nav>
     </header>
-    <div class="form-container">
-      <form id="registerForm">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          placeholder="Choose a username"
-          required
-        />
+    <main>
+      <div class="register-container">
+        <h2>Register</h2>
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              required
+            />
+            <div class="error-message" id="fullNameError"></div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+            />
+            <div class="error-message" id="emailError"></div>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+            />
+            <div class="error-message" id="passwordError"></div>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              required
+            />
+            <div class="error-message" id="confirmPasswordError"></div>
+          </div>
+          <button type="submit" class="submit-btn">Register</button>
+        </form>
+        <div class="login-link">
+          Already have an account?
+          <a href="/frontend/pages/login.html">Login here</a>
+        </div>
+      </div>
+    </main>
+    <script>
+      document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        // Reset error messages
+        document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+        
+        // Validate password match
+        if (password !== confirmPassword) {
+          document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+          document.getElementById('confirmPasswordError').style.display = 'block';
+          return;
+        }
+        
+        try {
+          const response = await fetch('http://localhost:8081/api/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              fullName,
+              email,
+              password
+            })
+          });
 
-        <label for="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Enter your full name"
-          required
-        />
+          const data = await response.json();
 
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Enter your email"
-          required
-        />
-
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Enter your password"
-          required
-        />
-
-        <label for="confirmPassword">Confirm Password</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          placeholder="Confirm your password"
-          required
-        />
-
-        <button type="submit">Register</button>
-      </form>
-      <p class="form-footer">
-        Already have an account?
-        <a href="/frontend/pages/login.html">Login here</a>
-      </p>
-    </div>
-    <script src="../js/validation.js"></script>
+          if (response.ok) {
+            // Store the token and user data
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            
+            // Redirect to dashboard
+            window.location.href = './dashboard.html';
+          } else {
+            // Show error message
+            document.getElementById('emailError').textContent = data.message || 'Registration failed';
+            document.getElementById('emailError').style.display = 'block';
+          }
+        } catch (error) {
+          console.error('Registration error:', error);
+          document.getElementById('emailError').textContent = 'An error occurred. Please try again.';
+          document.getElementById('emailError').style.display = 'block';
+        }
+      });
+    </script>
   </body>
 </html>
