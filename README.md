@@ -41,7 +41,7 @@ The **Syllabus Deadline Optimizer** is a web-based application designed to help 
   - WebSocket for real-time communication
 
 ### Database
-- **MySQL**
+- **PostgreSQL**
   - Optimized database schema
   - Efficient query performance
   - Data persistence and integrity
@@ -72,7 +72,7 @@ The **Syllabus Deadline Optimizer** is a web-based application designed to help 
 
 2. Configure database in `application.properties`:
    ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/syllabus_optimizer
+   spring.datasource.url=jdbc:postgresql://localhost:5432/syllabus_optimizer
    spring.datasource.username=root
    spring.datasource.password=root
    ```
@@ -141,7 +141,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ##  Acknowledgements
 
 - **Spring Boot** for providing a comprehensive backend framework
-- **MySQL** for being the reliable database solution
+- **PostgreSQL** for being the reliable database solution
 - **Vanilla JS** for simple frontend development
 - All contributors who have helped shape this project
 
