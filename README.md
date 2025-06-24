@@ -19,7 +19,6 @@ The **Syllabus Deadline Optimizer** is a web-based application designed to help 
 
 ### Advanced Features
 - **Real-time Updates**: WebSocket integration for instant progress updates
-- **AI-powered Optimization**: Smart deadline scheduling and resource allocation
 - **Interactive Dashboard**: Visual representation of course progress and deadlines
 - **Role-based Access Control**: Different permissions for professors and students
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
